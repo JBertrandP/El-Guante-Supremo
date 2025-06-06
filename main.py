@@ -3,10 +3,10 @@ from fastapi import FastAPI, Form
 from motor.motor_asyncio import AsyncIOMotorClient
 from dotenv import load_dotenv
 import os
-from app.db_models import *
+from app.db_models import Database
 from pydantic import BaseModel
 
-
+db = Database()
 app = FastAPI()
 
 class User(BaseModel):
@@ -16,7 +16,14 @@ class User(BaseModel):
 
 # ⏱️ Evento: Se ejecuta al arrancar la app
 @app.on_event("startup")
+async def startup_db_client():
+    """
+    Evento que se ejecuta al iniciar la aplicación.
+    Establece la conexión a la base de datos MongoDB.
+    """
+    db.start()
 
+    
 
 @app.get("/")
 async def root():
@@ -35,10 +42,14 @@ async def signup(full_name: Annotated[str, Form()],
     # Will return true or false
     if not full_name or not email or not password:
         return {"message": "Todos los campos son obligatorios"}
-    Response = user_signup(
-        full_name=full_name,
-        email=email,
-        password=password)
+    Response = db.insert_one(
+        "users",
+        {
+            "full_name": full_name,
+            "email": email,
+            "password": password
+        }
+    )
 
     if Response is False:
         return {"message": "Error al registrar el usuario"}
@@ -56,11 +67,15 @@ async def ping():
     except Exception as e:
         return {"message": f"Error al conectar a la base de datos: {e}"}
     
+
+
 # ⏹️ Evento: Se ejecuta al apagar la app
 @app.on_event("shutdown")
 async def shutdown_db_client():
-    client.close()
+    db.close()
     print("🛑 MongoDB desconectado")
+
+
 
 if __name__ == "__main__":
     import uvicorn 
