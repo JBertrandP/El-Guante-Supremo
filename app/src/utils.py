@@ -2,7 +2,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi import Request
 
 
-templates = Jinja2Templates(directory="app/src/templates")
+templates = Jinja2Templates(directory="app/templates")
 
 def render(request: Request, name: str, context: dict | None = None):
     """Renderiza una plantilla HTML con el contexto proporcionado.

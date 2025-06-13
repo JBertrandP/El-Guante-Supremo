@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from db_models import Database
+from app.src.db_models import Database
 from pydantic import BaseModel, EmailStr
 
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -44,7 +44,7 @@ app.add_middleware(
     allow_headers=["*"],  # Permitir todos los encabezados
 )
 
-from utils import render
+from app.src.utils import render
 
 @app.get("/")
 async def root(request: Request):
