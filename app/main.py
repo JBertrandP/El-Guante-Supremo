@@ -1,27 +1,38 @@
 from typing import Annotated
 from fastapi import FastAPI, Form, Request, status
+from contextlib import asynccontextmanager
 
-from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.db_models import Database
-from app.utils import render
-from pydantic import BaseModel
+from db_models import Database
+from pydantic import BaseModel, EmailStr
 
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-static = StaticFiles(directory="app/src/static")
-
 # Se variablizan las rutas de las plantillas y archivos estáticos
 
-#se crea la instancia la conexión a la base de datos MongoDB y de FastAPI
 db = Database()
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Al iniciar la app
+    await db.start()
+    print(" MongoDB conectado correctamente")
+    
+    yield  # ⏸ Aquí se ejecuta la app
+
+    #  Al apagar la app
+    db.close()
+    print(" MongoDB desconectado")
+
+#se crea la instancia la conexión a la base de datos MongoDB y de FastAPI
+app = FastAPI(lifespan=lifespan)
+app.mount("/static", StaticFiles(directory="app/src/static"), name="static")
 
 class User(BaseModel):
     full_name: str
-    email: str
+    email: EmailStr
     password: str
 
 # Configuración de CORS
@@ -33,33 +44,26 @@ app.add_middleware(
     allow_headers=["*"],  # Permitir todos los encabezados
 )
 
-# ⏱️ Evento: Se ejecuta al arrancar la app
-@app.on_event("startup")
-async def startup_db_client():
-    """
-    Evento que se ejecuta al iniciar la aplicación.
-    Establece la conexión a la base de datos MongoDB.
-    """
-    db.start()
-    print("🚀 MongoDB conectado")
+from utils import render
 
 @app.get("/")
 async def root(request: Request):
     """
     Endpoint raíz que devuelve un mensaje de bienvenida.
     """
-    return render(request, "hedionodo.html", {"message": "Bienvenido a la API de FastAPI con MongoDB"})
+    return render(request, "index.html", {"message": "Bienvenido a la API de FastAPI con MongoDB"})
 
 @app.post("/signup")
 async def signup(
                 request: Request,
                 full_name: Annotated[str, Form()],
-                email: Annotated[str, Form()],
+                email: Annotated[EmailStr, Form()],
                 password: Annotated[str, Form()]):
     """
     Endpoint para registrar un nuevo usuario.
     """
     response = RedirectResponse(url="/login", status_code=303)
+
     response.set_cookie(key="mensaje", value="Has+sido+registrado+correctamente")
     # Validación de los campos obligatorios
     if not full_name or not email or not password:
@@ -126,14 +130,28 @@ async def login(
     response.set_cookie(key="user_id", value=str(user["_id"]))
     return response
 
+
+
+
+
+
+
+
+
+
+
+
+#esta parte son pruebas
 @app.get("/ping")
 async def ping():
     """
     Endpoint para verificar la conexión a la base de datos.
     """
     try:
-        await app.mongodb.command("ping")
-        return {"message": "Pong! Conexión a la base de datos exitosa"}
+        await db.ping()
+        print(db.client.server_info())
+        return {"message": "Conexión a la base de datos exitosa", "status": "ok"}
+
     except Exception as e:
         return {"message": f"Error al conectar a la base de datos: {e}"}
 
@@ -144,11 +162,6 @@ def info(request: Request):
     return {"ip": cliente_ip, "navegador": user_agent}
 
 
-# ⏹️ Evento: Se ejecuta al apagar la app
-@app.on_event("shutdown")
-async def shutdown_db_client():
-    db.close()
-    print("🛑 MongoDB desconectado")
 
 
 

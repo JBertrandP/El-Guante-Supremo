@@ -1,0 +1,1 @@
+aqui ca ir el front de react en caso de que lo usemos
