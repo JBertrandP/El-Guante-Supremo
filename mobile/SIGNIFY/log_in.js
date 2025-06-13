@@ -1,32 +1,51 @@
-import React from 'react';
-import { ScrollView, View, Image, TextInput, Button, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet } from 'react-native';
 
-const login = () => {
+const Login = () => {
+  const [loginEmail, setLoginEmail] = useState('');
+  const [loginPassword, setLoginPassword] = useState('');
+
+  const handleLogin = () => {
+    if (!loginEmail || !loginPassword) {
+      Alert.alert('Error', 'Todos los campos son obligatorios');
+      return;
+    }
+    if (loginPassword.length < 8) {
+      Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+    // Aquí solo mostramos un mensaje de éxito, sin conexión a la API
+    Alert.alert('Éxito', 'Iniciando sesión...');
+  };
+
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         <Image 
-          source={require('./src/assets/logo.png')} 
+          source={require('./assets/logo.png')}  // Reemplaza con la ruta de tu logo
           style={styles.logo}
         />
         <TextInput 
           style={styles.input}
-          placeholder="Email"
+          placeholder="Correo electrónico"
           keyboardType="email-address"
           placeholderTextColor="#33AAEE"
+          value={loginEmail}
+          onChangeText={setLoginEmail}
         />
         <TextInput 
           style={styles.input}
           placeholder="Contraseña"
           secureTextEntry
           placeholderTextColor="#33AAEE"
+          value={loginPassword}
+          onChangeText={setLoginPassword}
         />
         <Button 
           title="Iniciar sesión"
           color="#33AAEE"
-          onPress={() => {}}
+          onPress={handleLogin}
         />
-        <Text style={styles.signUpText}>¿No tienes cuenta? Regístrate aquí</Text>
       </View>
     </ScrollView>
   );
@@ -57,11 +76,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     color: '#33AAEE',
   },
-  signUpText: {
-    marginTop: 16,
-    color: '#033552',
-    fontSize: 14,
-  },
 });
 
-export default login;
+export default Login;

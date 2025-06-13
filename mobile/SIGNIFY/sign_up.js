@@ -1,36 +1,58 @@
-import React from 'react';
-import { ScrollView, View, Image, TextInput, Button, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet } from 'react-native';
 
-const App = () => {
+const SignUp = () => {
+  const [signUpUsername, setSignUpUsername] = useState('');
+  const [signUpEmail, setSignUpEmail] = useState('');
+  const [signUpPassword, setSignUpPassword] = useState('');
+
+  const handleSignUp = () => {
+    if (!signUpUsername || !signUpEmail || !signUpPassword) {
+      Alert.alert('Error', 'Todos los campos son obligatorios');
+      return;
+    }
+    if (signUpPassword.length < 8) {
+      Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+    // Aquí solo mostramos un mensaje de éxito, sin conexión a la API
+    Alert.alert('Éxito', 'Registro exitoso...');
+  };
+
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         <Image 
-          source={require('./src/assets/logo.png')}  
+          source={require('./assets/logo.png')}  // Reemplaza con la ruta de tu logo
           style={styles.logo}
         />
         <TextInput 
           style={styles.input}
           placeholder="Usuario"
           placeholderTextColor="#33AAEE"
+          value={signUpUsername}
+          onChangeText={setSignUpUsername}
         />
         <TextInput 
           style={styles.input}
           placeholder="Correo electrónico"
           keyboardType="email-address"
           placeholderTextColor="#33AAEE"
+          value={signUpEmail}
+          onChangeText={setSignUpEmail}
         />
         <TextInput 
           style={styles.input}
           placeholder="Contraseña"
           secureTextEntry
           placeholderTextColor="#33AAEE"
+          value={signUpPassword}
+          onChangeText={setSignUpPassword}
         />
         <Button 
-          title="Sign In"
+          title="Registrarse"
           color="#33AAEE"
-          onPress={() => {}}
-          style={styles.button}
+          onPress={handleSignUp}
         />
       </View>
     </ScrollView>
@@ -62,12 +84,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     color: '#33AAEE',
   },
-  button: {
-    marginTop: 24,
-    padding: 14,
-    backgroundColor: '#054F7A',
-    color: '#33AAEE',
-  },
 });
 
-export default App;
+export default SignUp;
