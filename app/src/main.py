@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.src.db_models import Database
+from db_models import Database
 from pydantic import BaseModel, EmailStr
 
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI):
 
 #se crea la instancia la conexión a la base de datos MongoDB y de FastAPI
 app = FastAPI(lifespan=lifespan)
-app.mount("/static", StaticFiles(directory="app/src/static"), name="static")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 class User(BaseModel):
     full_name: str
@@ -44,7 +44,7 @@ app.add_middleware(
     allow_headers=["*"],  # Permitir todos los encabezados
 )
 
-from app.src.utils import render
+from utils import render
 
 @app.get("/")
 async def root(request: Request):
@@ -150,6 +150,7 @@ async def ping():
     try:
         await db.ping()
         print(db.client.server_info())
+        db.find_all("capitulo")
         return {"message": "Conexión a la base de datos exitosa", "status": "ok"}
 
     except Exception as e:
