@@ -23,7 +23,7 @@ const SignUp = () => {
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         <Image 
-          source={require('./assets/logo.png')}  // Reemplaza con la ruta de tu logo
+          source={require('./src/assets/logo.png')}  // Reemplaza con la ruta de tu logo
           style={styles.logo}
         />
         <TextInput 
