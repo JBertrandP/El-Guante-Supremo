@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image, StyleSheet } from 'react-native';
+import * as SplashScreen from 'expo-splash-screen';
+
+
+SplashScreen.preventAutoHideAsync();
 
 const PantallaPrincipal = () => {
+  useEffect(() => {
+   
+    const timer = setTimeout(async () => {
+      
+      await SplashScreen.hideAsync();
+    }, 5000);
+
+    
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <View style={styles.container}>
       <Image
@@ -10,7 +25,7 @@ const PantallaPrincipal = () => {
         accessibilityLabel="Logo"
       />
       <Image
-        source={require('./src/assets/loading.gif')} 
+        source={require('./src/assets/loading.gif')}
         style={styles.gif}
       />
     </View>
