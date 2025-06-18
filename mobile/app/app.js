@@ -1,8 +1,0 @@
-import React from 'react';
-import SplashScreenComponent from './scripts/splash_screen';  // Importamos desde la carpeta scripts
-
-const App = () => {
-  return <SplashScreenComponent />; 
-};
-
-export default App;
