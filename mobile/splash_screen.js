@@ -5,12 +5,12 @@ const PantallaPrincipal = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('./src/assets/logo.png')} 
+        source={require('./assets/logo.png')} 
         style={styles.icono}
         accessibilityLabel="Logo"
       />
       <Image
-        source={require('./src/assets/loading.gif')} 
+        source={require('./assets/loading.gif')} 
         style={styles.gif}
       />
     </View>

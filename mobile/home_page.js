@@ -6,7 +6,7 @@ const homePage = () => {
     <View style={styles.container}>
       <Text style={styles.header}>Bienvenido</Text>
       <Image
-    
+    source={require('./assets/guante.png')}
         style={styles.image}
       />
       <Text style={styles.subHeader}>Descubre cómo funciona</Text>

@@ -22,7 +22,7 @@ const Login = () => {
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
         <Image 
-          source={require('./src/assets/logo.png')}  
+          source={require('./assets/logo.png')}  
           style={styles.logo}
         />
         <TextInput 
