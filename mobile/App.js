@@ -1,18 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import {PantallaPrincipal} from "./splash_screen.js";
-export default function App() { 
-  return (
-    <PantallaPrincipal />
-  );
-}
+import React, { useEffect, useState } from 'react';
+import PantallaPrincipal from './views/splash_screen';
+import Login from './views/Login'; // Importa la pantalla de login
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#033552',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  const [mostrarSplash, setMostrarSplash] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMostrarSplash(false);
+    }, 3000); // 3 segundos
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return mostrarSplash ? <PantallaPrincipal /> : <Login />;
+}
