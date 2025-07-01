@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: width * 0.8, // 80% del ancho de la pantalla
-    height: height * 0.25, // 25% de la altura de la pantalla
+    height: height * 0.30, // 25% de la altura de la pantalla
     resizeMode: 'contain',
     marginBottom: 30,
   },
