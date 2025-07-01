@@ -23,21 +23,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#33AAEE',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 16,
+    justifyContent: 'center', // Centra en el eje vertical
+    alignItems: 'center', // Centra en el eje horizontal
   },
   icono: {
-    width: width * 0.8, // 60% del ancho de la pantalla0
-    height: height * 0.35, // 25% de la altura de la pantalla
+    width: width * 0.8, // 80% del ancho de la pantalla
+    height: height * 0.35, // 35% de la altura de la pantalla
     resizeMode: 'contain',
   },
   gif: {
-    width: width * 0.6, // 80% del ancho de la pantalla
+    width: width * 0.6, // 60% del ancho de la pantalla
     height: height * 0.35, // 35% de la altura de la pantalla
     resizeMode: 'contain',
-    marginTop: 20,
+    marginTop: 20, // Espacio entre el logo y el gif
   },
 });
 
 export default PantallaPrincipal;
+
