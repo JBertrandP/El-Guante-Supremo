@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
 
-const { width, height } = Dimensions.get('window'); // Obtén el tamaño de la pantalla
+const { width, height } = Dimensions.get('window');
 
 const Login = () => {
   const [loginEmail, setLoginEmail] = useState('');
@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   logo: {
-    width: width * 0.8, // 80% del ancho de la pantalla
-    height: height * 0.30, // 25% de la altura de la pantalla
+    width: width * 0.8, 
+    height: height * 0.35,
     resizeMode: 'contain',
     marginBottom: 30,
   },
