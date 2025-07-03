@@ -47,7 +47,7 @@ const Login = () => {
         {/* Botón de Iniciar sesión */}
         <Button 
           title="Iniciar sesión"
-          color="#33AAEE"
+          color="  #033552"
           onPress={handleLogin}
         />
       </View>
