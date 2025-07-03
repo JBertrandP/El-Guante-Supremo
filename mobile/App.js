@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import PantallaPrincipal from './views/splash_screen'; 
 import Login from './views/log_in'; 
-
+import SignUp from './views/sign_up'; // Importa SignUp si es necesario
 export default function App() {
   const [showLogin, setShowLogin] = useState(false);
 

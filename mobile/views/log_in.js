@@ -43,6 +43,8 @@ const Login = () => {
           value={loginPassword}
           onChangeText={setLoginPassword}
         />
+        
+        {/* Botón de Iniciar sesión */}
         <Button 
           title="Iniciar sesión"
           color="#33AAEE"
