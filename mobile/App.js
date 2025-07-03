@@ -18,7 +18,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       
-      {showLogin ? <Login /> : <PantallaPrincipal />}
+     <PantallaPrincipal /> 
     </View>
   );
 }
