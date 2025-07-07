@@ -20,6 +20,11 @@ const Login = () => {
     Alert.alert('Éxito', 'Iniciando sesión...');
   };
 
+  const handleSignUpRedirect = () => {
+    // Esta función puede redirigir a la pantalla de registro
+    Alert.alert('Redirigiendo', 'Dirígete a la pantalla de registro.');
+  };
+
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
@@ -44,12 +49,20 @@ const Login = () => {
           onChangeText={setLoginPassword}
         />
         
-        {}
         <View style={styles.buttonContainer}>
           <Button 
             title="Iniciar sesión"
             color="#33AAEE" 
             onPress={handleLogin}
+          />
+        </View>
+
+        {/* Botón de "No tienes cuenta, crea una" */}
+        <View style={styles.buttonContainer}>
+          <Button 
+            title="No tienes cuenta, crea una"
+            color="#33AAEE" 
+            onPress={handleSignUpRedirect}
           />
         </View>
       </View>

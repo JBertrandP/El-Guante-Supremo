@@ -51,11 +51,15 @@ const SignUp = () => {
           value={signUpPassword}
           onChangeText={setSignUpPassword}
         />
-        <Button 
-          title="Registrarse"
-          color="#33AAEE"
-          onPress={handleSignUp}
-        />
+        
+        {/* Rectángulo para el botón de Registrarse */}
+        <View style={styles.buttonContainer}>
+          <Button 
+            title="Registrarse"
+            color="white"
+            onPress={handleSignUp}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -68,14 +72,16 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    alignItems: 'center',
+    justifyContent: 'flex-start', // Coloca el contenido más abajo
+    alignItems: 'center', // Centra horizontalmente
+    paddingTop: height * 0.17, // Aumenté el padding para bajar el contenido un poco más
     padding: 24,
   },
   logo: {
-    width: width * 0.8, // 80% del ancho de la pantalla
-    height: height * 0.25, // 25% de la altura de la pantalla
+    width: width * 0.6, // Reducido el tamaño de la imagen
+    height: height * 0.2, // Reducido el tamaño de la imagen
     resizeMode: 'contain',
-    marginBottom: 30,
+    marginBottom: 30, // Espacio abajo de la imagen
   },
   input: {
     width: '100%',
@@ -86,6 +92,13 @@ const styles = StyleSheet.create({
     borderColor: '#33AAEE',
     borderWidth: 1,
     color: '#33AAEE',
+  },
+  buttonContainer: {
+    width: '100%',
+    backgroundColor: '#033552', 
+    borderRadius: 8,
+    marginTop: 30,
+    overflow: 'hidden',
   },
 });
 
