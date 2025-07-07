@@ -12,21 +12,21 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">
-        {/* Splash Screen */}
+        {}
         <Stack.Screen
           name="Splash"
           component={PantallaPrincipal}
           options={{ headerShown: false }} // Hide header for splash
         />
         
-        {/* Login Screen */}
+        {}
         <Stack.Screen
           name="Login"
           component={Login}
           options={{ headerShown: false }}
         />
         
-        {/* SignUp Screen */}
+        {}
         <Stack.Screen
           name="SignUp"
           component={SignUp}
@@ -35,7 +35,7 @@ export default function App() {
         />
       </Stack.Navigator>
 
-      {/* Show status bar */}
+      {}
       <StatusBar style="auto" />
     </NavigationContainer>
   );
