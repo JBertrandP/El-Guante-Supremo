@@ -5,12 +5,12 @@ const { width, height } = Dimensions.get('window');
 
 const PantallaPrincipal = ({ navigation }) => {
   useEffect(() => {
-    // Set a timer to navigate to the Login screen after 3 seconds
+  
     const timer = setTimeout(() => {
-      navigation.replace('Login');  // Replace Splash with Login screen
+      navigation.replace('Login'); 
     }, 3000);
 
-    // Cleanup the timeout when the component is unmounted
+
     return () => clearTimeout(timer);
   }, [navigation]);
 

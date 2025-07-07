@@ -30,7 +30,7 @@ const SignUp = () => {
         />
         <TextInput 
           style={styles.input}
-          placeholder="Usuario"
+          placeholder="Nombre"
           placeholderTextColor="#33AAEE"
           value={signUpUsername}
           onChangeText={setSignUpUsername}

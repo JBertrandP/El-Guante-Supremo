@@ -3,7 +3,7 @@ import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensio
 
 const { width, height } = Dimensions.get('window');
 
-const Login = ({ navigation }) => { // 'navigation' prop is passed automatically by react-navigation
+const Login = ({ navigation }) => {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
 
@@ -21,7 +21,7 @@ const Login = ({ navigation }) => { // 'navigation' prop is passed automatically
   };
 
   const handleSignUpRedirect = () => {
-    navigation.navigate('SignUp'); // Navigate to the SignUp screen
+    navigation.navigate('SignUp'); 
   };
 
   return (
@@ -56,12 +56,12 @@ const Login = ({ navigation }) => { // 'navigation' prop is passed automatically
           />
         </View>
 
-        {/* Botón de "No tienes cuenta, crea una" */}
+        {}
         <View style={styles.buttonContainer}>
           <Button
             title="No tienes cuenta, crea una"
             color="#33AAEE"
-            onPress={handleSignUpRedirect} // Navigate to SignUp when clicked
+            onPress={handleSignUpRedirect} 
           />
         </View>
       </View>
