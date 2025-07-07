@@ -5,7 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import PantallaPrincipal from './views/splash_screen'; 
 import Login from './views/log_in';  
 import SignUp from './views/sign_up'; 
-
+import homePage from './views/home_page';
 const Stack = createStackNavigator();
 
 export default function App() {
