@@ -1,29 +1,42 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
-import PantallaPrincipal from './views/splash_screen'; 
-import Login from './views/log_in'; 
-import SignUp from './views/sign_up'; 
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import PantallaPrincipal from './views/splash_screen';  // Splash screen
+import Login from './views/log_in';  // Login screen
+import SignUp from './views/sign_up';  // SignUp screen
+
+const Stack = createStackNavigator();
+
 export default function App() {
-  const [showLogin, setShowLogin] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLogin(true);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
-    <View style={styles.container}>
-      {showLogin ? <Login /> : <PantallaPrincipal />}
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Splash">
+        {/* Splash Screen */}
+        <Stack.Screen
+          name="Splash"
+          component={PantallaPrincipal}
+          options={{ headerShown: false }} // Hide header for splash
+        />
+        
+        {/* Login Screen */}
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{ headerShown: false }}
+        />
+        
+        {/* SignUp Screen */}
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+           options={{ headerShown: false }} 
+
+        />
+      </Stack.Navigator>
+
+      {/* Show status bar */}
       <StatusBar style="auto" />
-    </View>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

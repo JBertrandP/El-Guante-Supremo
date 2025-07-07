@@ -3,7 +3,7 @@ import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensio
 
 const { width, height } = Dimensions.get('window');
 
-const Login = () => {
+const Login = ({ navigation }) => { // 'navigation' prop is passed automatically by react-navigation
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
 
@@ -16,23 +16,22 @@ const Login = () => {
       Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres');
       return;
     }
-    
+
     Alert.alert('Éxito', 'Iniciando sesión...');
   };
 
   const handleSignUpRedirect = () => {
-    // Esta función puede redirigir a la pantalla de registro
-    Alert.alert('Redirigiendo', 'Dirígete a la pantalla de registro.');
+    navigation.navigate('SignUp'); // Navigate to the SignUp screen
   };
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
-        <Image 
-          source={require('./assets/logo.png')}  
+        <Image
+          source={require('./assets/logo.png')}
           style={styles.logo}
         />
-        <TextInput 
+        <TextInput
           style={styles.input}
           placeholder="Correo electrónico"
           keyboardType="email-address"
@@ -40,7 +39,7 @@ const Login = () => {
           value={loginEmail}
           onChangeText={setLoginEmail}
         />
-        <TextInput 
+        <TextInput
           style={styles.input}
           placeholder="Contraseña"
           secureTextEntry
@@ -50,19 +49,19 @@ const Login = () => {
         />
         
         <View style={styles.buttonContainer}>
-          <Button 
+          <Button
             title="Iniciar sesión"
-            color="#33AAEE" 
+            color="#33AAEE"
             onPress={handleLogin}
           />
         </View>
 
         {/* Botón de "No tienes cuenta, crea una" */}
         <View style={styles.buttonContainer}>
-          <Button 
+          <Button
             title="No tienes cuenta, crea una"
-            color="#33AAEE" 
-            onPress={handleSignUpRedirect}
+            color="#33AAEE"
+            onPress={handleSignUpRedirect} // Navigate to SignUp when clicked
           />
         </View>
       </View>
@@ -77,16 +76,16 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'flex-start', 
-    alignItems: 'center', 
-    paddingTop: height * 0.17, 
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    paddingTop: height * 0.17,
     padding: 24,
   },
   logo: {
-    width: width * 0.6, 
+    width: width * 0.6,
     height: height * 0.2,
     resizeMode: 'contain',
-    marginBottom: 30, 
+    marginBottom: 30,
   },
   input: {
     width: '100%',
@@ -96,14 +95,14 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderColor: '#33AAEE',
     borderWidth: 1,
-    color: '#33AAEE', 
+    color: '#33AAEE',
   },
   buttonContainer: {
     width: '100%',
-    backgroundColor: '#033552', 
+    backgroundColor: '#033552',
     borderRadius: 8,
     marginTop: 30,
-    overflow: 'hidden', 
+    overflow: 'hidden',
   },
 });
 
