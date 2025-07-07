@@ -44,11 +44,11 @@ const Login = () => {
           onChangeText={setLoginPassword}
         />
         
-        {/* Rectángulo para el botón de Iniciar sesión */}
+        {}
         <View style={styles.buttonContainer}>
           <Button 
             title="Iniciar sesión"
-            color="#33AAEE" // Cambié el color del texto del botón
+            color="#33AAEE" 
             onPress={handleLogin}
           />
         </View>
@@ -64,16 +64,16 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: 'flex-start', // Coloca el contenido más abajo
-    alignItems: 'center', // Centra horizontalmente
-    paddingTop: height * 0.17, // Aumenté el padding para bajar el contenido un poco más
+    justifyContent: 'flex-start', 
+    alignItems: 'center', 
+    paddingTop: height * 0.17, 
     padding: 24,
   },
   logo: {
-    width: width * 0.6, // Reducido el tamaño de la imagen
-    height: height * 0.2, // Reducido el tamaño de la imagen
+    width: width * 0.6, 
+    height: height * 0.2,
     resizeMode: 'contain',
-    marginBottom: 30, // Espacio abajo de la imagen
+    marginBottom: 30, 
   },
   input: {
     width: '100%',
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderColor: '#33AAEE',
     borderWidth: 1,
-    color: '#33AAEE', // Color de los textos dentro de los inputs
+    color: '#33AAEE', 
   },
   buttonContainer: {
     width: '100%',
