@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
-const homePage = () => {
+const HomePage = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Bienvenido</Text>
@@ -9,16 +9,11 @@ const homePage = () => {
     source={require('./assets/guante.png')}
         style={styles.image}
       />
-      <Text style={styles.subHeader}>Descubre cómo funciona</Text>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>O prueba la traducción rápida</Text>
-      </TouchableOpacity>
+    
+     
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Text style={styles.footerButtonText}>Inicio</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
+               <TouchableOpacity style={styles.footerButton}>
           <Text style={styles.footerButtonText}>Traductor</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerButton}>
@@ -86,4 +81,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default homePage;
+export default HomePage;

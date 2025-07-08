@@ -17,7 +17,9 @@ const Login = ({ navigation }) => {
       return;
     }
 
+    // Redirigir a la página de inicio después del login exitoso
     Alert.alert('Éxito', 'Iniciando sesión...');
+    navigation.navigate('Home'); // Redirige a la pantalla Home
   };
 
   const handleSignUpRedirect = () => {
@@ -56,7 +58,6 @@ const Login = ({ navigation }) => {
           />
         </View>
 
-        {}
         <View style={styles.buttonContainer}>
           <Button
             title="No tienes cuenta, crea una"
