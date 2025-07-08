@@ -6,7 +6,7 @@ const Alfabeto = () => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const alphabet = [
-    { letter: 'A', description: 'Descripción de A' },
+    { letter: 'A', description: 'Descripción de A'  },
     { letter: 'B', description: 'Descripción de B' },
     { letter: 'C', description: 'Descripción de C' },
     { letter: 'D', description: 'Descripción de D' },
@@ -18,7 +18,7 @@ const Alfabeto = () => {
     { letter: 'J', description: 'Descripción de J' },
     { letter: 'K', description: 'Descripción de K' },
     { letter: 'L', description: 'Descripción de L' },
-       { letter: 'M', description: 'Descripción de M' },
+    { letter: 'M', description: 'Descripción de M' },
     { letter: 'N', description: 'Descripción de N' },
     { letter: 'Ñ', description: 'Descripción de Ñ' },
     { letter: 'O', description: 'Descripción de O' },
