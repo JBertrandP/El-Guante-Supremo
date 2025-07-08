@@ -17,9 +17,9 @@ const Login = ({ navigation }) => {
       return;
     }
 
-    // Redirigir a la página de inicio después del login exitoso
+  
     Alert.alert('Éxito', 'Iniciando sesión...');
-    navigation.navigate('Home'); // Redirige a la pantalla Home
+    navigation.navigate('Home'); 
   };
 
   const handleSignUpRedirect = () => {
