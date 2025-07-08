@@ -16,26 +16,26 @@ export default function App() {
         <Stack.Screen
           name="Splash"
           component={PantallaPrincipal}
-          options={{ headerShown: false }} 
+          options={{ headerShown: false }}  
         />
 
         <Stack.Screen
           name="Login"
           component={Login}
-          options={{ headerShown: false }}
+          options={{ headerStyle: { backgroundColor: '#033552' } }}
         />
 
         <Stack.Screen
           name="SignUp"
           component={SignUp}
-          options={{ headerShown: false }} 
+         options={{ headerStyle: { backgroundColor: '#033552' } }}
         />
 
-        {/* Pantalla de Home */}
+      
         <Stack.Screen
           name="Home"
           component={Home}
-          options={{ headerShown: false }} 
+          options={{ headerStyle: { backgroundColor: '#033552' } }}
         />
 
       </Stack.Navigator>
@@ -44,4 +44,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
