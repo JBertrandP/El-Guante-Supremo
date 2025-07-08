@@ -1,8 +1,11 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons'; 
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native'; // Importar useNavigation para la navegación
 
 const HomePage = () => {
+  const navigation = useNavigation(); // Crear la referencia de navegación
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Bienvenido</Text>
@@ -16,10 +19,16 @@ const HomePage = () => {
           <FontAwesome5 name="language" size={24} color="white" />
           <Text style={styles.footerButtonText}>Traductor</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
+
+        {/* Botón que navega a la pantalla Alfabeto */}
+        <TouchableOpacity 
+          style={styles.footerButton} 
+          onPress={() => navigation.navigate('Alfabeto')} // Navegar a la pantalla Alfabeto
+        >
           <Ionicons name="text-outline" size={24} color="white" /> 
           <Text style={styles.footerButtonText}>Alfabeto</Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.footerButton}>
           <FontAwesome5 name="book" size={24} color="white" />
           <Text style={styles.footerButtonText}>Diccionario</Text>
@@ -43,7 +52,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginBottom: 40,  
   },
-    image: {
+  image: {
     width: '100%',  
     height: undefined, 
     aspectRatio: 1,  

@@ -7,6 +7,7 @@ import { useFonts } from 'expo-font';
 import Login from './views/log_in';  
 import SignUp from './views/sign_up'; 
 import Home from './views/HomePage';  
+import Alfabeto from './views/Alfabeto'; 
 
 const Stack = createStackNavigator();
 
@@ -48,11 +49,26 @@ export default function App() {
           }}
         />
 
-      
         <Stack.Screen
           name="Home"
           component={Home}
           options={{ 
+            headerStyle: { backgroundColor: '#033552' },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: {
+              fontFamily: 'Roboto', 
+              fontWeight: 'bold',
+              fontSize: 22,
+            },
+          }}
+        />
+
+        {/* Agregar la pantalla de Alfabeto */}
+        <Stack.Screen
+          name="Alfabeto"
+          component={Alfabeto}
+          options={{ 
+            title: 'Alfabeto',
             headerStyle: { backgroundColor: '#033552' },
             headerTintColor: '#FFFFFF',
             headerTitleStyle: {
