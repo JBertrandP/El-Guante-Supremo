@@ -7,14 +7,12 @@ const HomePage = () => {
     <View style={styles.container}>
       <Text style={styles.header}>Bienvenido</Text>
       <Image
-        source={require('./assets/guante.png')}  
+        source={require('./assets/guante2.0.png')}  
         style={styles.image}
       />
-      
-
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton}>
-          <Ionicons name="home" size={24} color="white" />
+          <Ionicons name="home-outline" size={24} color="white" />
           <Text style={styles.footerButtonText}>Inicio</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerButton}>
@@ -46,13 +44,14 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     color: '#FFFFFF',
-    marginBottom: 20,
+    marginBottom: 40,  
   },
-  
-  image: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
+    image: {
+    width: '100%',  
+    height: undefined, 
+    aspectRatio: 1,  
+    resizeMode: 'contain',  
+    marginBottom: 60, 
   },
   footer: {
     flexDirection: 'row',
