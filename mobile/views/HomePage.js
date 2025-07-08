@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons'; // Asegúrate de tener expo-vector-icons instalado
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons'; 
 
 const HomePage = () => {
   return (
@@ -10,7 +10,7 @@ const HomePage = () => {
         source={require('./assets/guante.png')}  
         style={styles.image}
       />
-      <Text style={styles.subHeader}>Descubre cómo funciona</Text>
+      
 
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footerButton}>
@@ -48,11 +48,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginBottom: 20,
   },
-  subHeader: {
-    fontSize: 18,
-    color: '#FFFFFF',
-    marginBottom: 20,
-  },
+  
   image: {
     width: 100,
     height: 100,
