@@ -11,10 +11,7 @@ const HomePage = () => {
         style={styles.image}
       />
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
-          <Ionicons name="home-outline" size={24} color="white" />
-          <Text style={styles.footerButtonText}>Inicio</Text>
-        </TouchableOpacity>
+        
         <TouchableOpacity style={styles.footerButton}>
           <FontAwesome5 name="language" size={24} color="white" />
           <Text style={styles.footerButtonText}>Traductor</Text>
