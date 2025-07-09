@@ -16,13 +16,12 @@ class Database:
         Inicia la conexión a la base de datos MongoDB.
         """
         try:
-            self.client = AsyncIOMotorClient(os.getenv("MONGO_URL"), tls=True)
+            self.client = AsyncIOMotorClient(os.getenv("MONGO_URI"))
             self.db = self.client[os.getenv("DATABASE_NAME")]
             print(f"Conectado a MongoDB: {await self.client.server_info()}")
         except Exception as e:
             print(f" Error al conectar a MongoDB: {e}")
             raise e
-
 
     def close(self):
         """
@@ -36,18 +35,20 @@ class Database:
         except Exception as e:
             print(f"Error al cerrar la conexión a MongoDB: {e}")
         
+
     def get_collection(self, collection_name):
         """
         Obtiene una colección de la base de datos MongoDB.
         """
         try:
-            if not self.db:
-                raise ValueError("La conexión a la base de datos no está iniciada.")
+            if self.db is None:
+                print("La base de datos no está conectada.")
+                return None
             return self.db[collection_name]
         except Exception as e:
-            print(f"Error al obtener la colección: {e}")
+            print(f"Error al obtener la colección {collection_name}: {e}")
             return None
-
+        
     def insert_one(self, collection_name, document):
         """
         Inserta un documento en una colección de la base de datos MongoDB.
@@ -112,7 +113,7 @@ class Database:
         except Exception as e:
             print(f"Error al eliminar documento: {e}")
             return None
-        
+
     async def ping(self):
         """
         Verifica la conexión a la base de datos MongoDB.
