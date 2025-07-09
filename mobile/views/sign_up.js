@@ -1,29 +1,28 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
-import axios from 'axios';  // Importamos axios para hacer solicitudes HTTP
-
-const { width, height } = Dimensions.get('window');  // Obtener las dimensiones de la pantalla
+import axios from 'axios'; 
+const { width, height } = Dimensions.get('window');  
 
 const SignUp = () => {
   const [signUpUsername, setSignUpUsername] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
 
-  // Función para validar el correo electrónico
+  
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
 
-  // Función para manejar el registro de usuario
+ 
   const handleSignUp = async () => {
-    // Validar si los campos están vacíos
+   
     if (!signUpUsername || !signUpEmail || !signUpPassword) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
 
-    // Validar si el correo tiene el formato correcto
+    
     if (!validateEmail(signUpEmail)) {
       Alert.alert('Error', 'Por favor, ingresa un correo electrónico válido');
       return;
@@ -35,23 +34,23 @@ const SignUp = () => {
       return;
     }
 
-    // Hacer la solicitud a la API para registrar el usuario
+   
     try {
       const response = await axios.post('http://10.100.1.68:8000/signup', {
-        username: signUpUsername,
+        full_name: signUpUsername,
         email: signUpEmail,
         password: signUpPassword,
       });
 
-      // Si la respuesta es exitosa, mostramos un mensaje de éxito
+      
       if (response.data.success) {
         Alert.alert('Éxito', 'Registro exitoso...');
       } else {
-        // Si la respuesta es negativa (por ejemplo, usuario ya existe)
+        
         Alert.alert('Error', 'Este usuario ya está registrado');
       }
     } catch (error) {
-      // En caso de error con la solicitud a la API
+    
       console.error(error);
       Alert.alert('Error', 'Hubo un problema al registrarse, por favor intenta nuevamente');
     }
@@ -60,13 +59,13 @@ const SignUp = () => {
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
-        {/* Logo */}
+       
         <Image
           source={require('./assets/logo.png')}
           style={styles.logo}
         />
         
-        {/* Campo de nombre */}
+        
         <TextInput
           style={styles.input}
           placeholder="Nombre"
@@ -75,7 +74,7 @@ const SignUp = () => {
           onChangeText={setSignUpUsername}
         />
         
-        {/* Campo de correo electrónico */}
+        
         <TextInput
           style={styles.input}
           placeholder="Correo electrónico"
@@ -95,7 +94,7 @@ const SignUp = () => {
           onChangeText={setSignUpPassword}
         />
         
-        {/* Botón de registro */}
+       
         <View style={styles.buttonContainer}>
           <Button
             title="Registrarse"

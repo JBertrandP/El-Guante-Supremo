@@ -28,14 +28,14 @@ const Login = ({ navigation }) => {
       return;
     }
 
-    // Validar la longitud de la contraseña
+ 
     if (loginPassword.length < 8) {
       Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres');
       return;
     }
 
     try {
-      // Enviar datos al servidor de acuerdo con lo que introdujo el usuario
+      
       const response = await axios.post('http://10.100.1.68:8000/login', {
         email: loginEmail,
         password: loginPassword,
@@ -43,12 +43,12 @@ const Login = ({ navigation }) => {
 
       if (response.data.success) {
         Alert.alert('Éxito', 'Iniciando sesión...');
-        navigation.navigate('Home'); // Redirigir a la pantalla Home
+        navigation.navigate('Home'); 
       } else {
         Alert.alert('Error', 'Correo o contraseña incorrectos');
       }
     } catch (error) {
-      // En caso de error con la API, muestra un mensaje
+     
       console.error(error);
       Alert.alert('Error', 'Hubo un problema al iniciar sesión, por favor intenta nuevamente');
     }
@@ -67,7 +67,7 @@ const Login = ({ navigation }) => {
           style={styles.logo}
         />
         
-        {/* Campo de correo electrónico o nombre de usuario */}
+        
         <TextInput
           style={styles.input}
           placeholder="Correo electrónico o nombre de usuario"
@@ -77,7 +77,7 @@ const Login = ({ navigation }) => {
           onChangeText={setLoginEmail}
         />
         
-        {/* Campo de contraseña */}
+       
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
@@ -87,7 +87,7 @@ const Login = ({ navigation }) => {
           onChangeText={setLoginPassword}
         />
         
-        {/* Botón de inicio de sesión */}
+        
         <View style={styles.buttonContainer}>
           <Button
             title="Iniciar sesión"
@@ -96,7 +96,7 @@ const Login = ({ navigation }) => {
           />
         </View>
 
-        {/* Botón de redirección a SignUp */}
+        
         <View style={styles.buttonContainer}>
           <Button
             title="No tienes cuenta, crea una"
@@ -118,14 +118,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: height * 0.1,  // Ajusta el margen superior de acuerdo con la altura de la pantalla
-    paddingHorizontal: width * 0.05,  // Añade márgenes horizontales para los dispositivos más pequeños
+    paddingTop: height * 0.1, 
+    paddingHorizontal: width * 0.05, 
   },
   logo: {
     width: width * 0.6,
     height: height * 0.2,
     resizeMode: 'contain',
-    marginBottom: height * 0.05,  // Espaciado dinámico con respecto a la altura de la pantalla
+    marginBottom: height * 0.05,  
   },
   input: {
     width: '100%',
