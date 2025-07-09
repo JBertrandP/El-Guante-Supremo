@@ -8,15 +8,31 @@ const SignUp = () => {
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
 
+ 
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+    return emailRegex.test(email);
+  };
+
   const handleSignUp = () => {
+    
     if (!signUpUsername || !signUpEmail || !signUpPassword) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
+
+  
+    if (!validateEmail(signUpEmail)) {
+      Alert.alert('Error', 'Por favor, ingresa un correo electrónico válido');
+      return;
+    }
+
+    
     if (signUpPassword.length < 8) {
       Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres');
       return;
     }
+
    
     Alert.alert('Éxito', 'Registro exitoso...');
   };
@@ -24,10 +40,13 @@ const SignUp = () => {
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
+       
         <Image 
           source={require('./assets/logo.png')}  
           style={styles.logo}
         />
+        
+        
         <TextInput 
           style={styles.input}
           placeholder="Nombre"
@@ -35,6 +54,8 @@ const SignUp = () => {
           value={signUpUsername}
           onChangeText={setSignUpUsername}
         />
+        
+       
         <TextInput 
           style={styles.input}
           placeholder="Correo electrónico"
@@ -43,6 +64,8 @@ const SignUp = () => {
           value={signUpEmail}
           onChangeText={setSignUpEmail}
         />
+        
+        
         <TextInput 
           style={styles.input}
           placeholder="Contraseña"
@@ -52,7 +75,7 @@ const SignUp = () => {
           onChangeText={setSignUpPassword}
         />
         
-     
+       
         <View style={styles.buttonContainer}>
           <Button 
             title="Registrarse"
@@ -74,14 +97,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start', 
     alignItems: 'center', 
-    paddingTop: height * 0.17,
-    padding: 24,
+    paddingTop: height * 0.1, 
+    paddingHorizontal: width * 0.05, 
   },
   logo: {
     width: width * 0.6, 
     height: height * 0.2, 
     resizeMode: 'contain',
-    marginBottom: 30, 
+    marginBottom: height * 0.05,  
   },
   input: {
     width: '100%',
@@ -92,12 +115,13 @@ const styles = StyleSheet.create({
     borderColor: '#33AAEE',
     borderWidth: 1,
     color: '#33AAEE',
+    fontSize: width * 0.04,  
   },
   buttonContainer: {
     width: '100%',
     backgroundColor: '#033552', 
     borderRadius: 8,
-    marginTop: 30,
+    marginTop: height * 0.05, 
     overflow: 'hidden',
   },
 });

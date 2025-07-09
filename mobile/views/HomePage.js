@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native'; // Importar useNavigation para la navegación
-
+import { useNavigation } from '@react-navigation/native'; 
 const HomePage = () => {
-  const navigation = useNavigation(); // Crear la referencia de navegación
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -20,10 +19,10 @@ const HomePage = () => {
           <Text style={styles.footerButtonText}>Traductor</Text>
         </TouchableOpacity>
 
-        {/* Botón que navega a la pantalla Alfabeto */}
+        
         <TouchableOpacity 
           style={styles.footerButton} 
-          onPress={() => navigation.navigate('Alfabeto')} // Navegar a la pantalla Alfabeto
+          onPress={() => navigation.navigate('Alfabeto')} 
         >
           <Ionicons name="text-outline" size={24} color="white" /> 
           <Text style={styles.footerButtonText}>Alfabeto</Text>
