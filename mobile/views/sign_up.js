@@ -37,7 +37,7 @@ const SignUp = () => {
 
     // Hacer la solicitud a la API para registrar el usuario
     try {
-      const response = await axios.post('http://10.100.1.92:8000/signup/', {
+      const response = await axios.post('http://10.100.1.68:8000/signup', {
         username: signUpUsername,
         email: signUpEmail,
         password: signUpPassword,

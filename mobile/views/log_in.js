@@ -36,7 +36,7 @@ const Login = ({ navigation }) => {
 
     try {
       // Enviar datos al servidor de acuerdo con lo que introdujo el usuario
-      const response = await axios.post('http://10.100.1.92:8000/login', {
+      const response = await axios.post('http://10.100.1.68:8000/login', {
         email: loginEmail,
         password: loginPassword,
       });
