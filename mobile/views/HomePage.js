@@ -33,11 +33,6 @@ const HomePage = () => {
           <Text style={styles.footerButtonText}>Diccionario</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerButton}>
-          <FontAwesome5 name="bluetooth" size={24} color="white" />
-          <Text style={styles.footerButtonText}>Agregar Dispositivo</Text>
-        </TouchableOpacity>
-        
       </View>
     </View>
   );
@@ -70,20 +65,21 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     bottom: 0,
-    padding: 10,
+    padding: 10,  // Mantén el padding moderado
     backgroundColor: 'rgba(7, 106, 163, 0.8)', 
   },
   footerButton: {
     alignItems: 'center',
     backgroundColor: '#054F7A',
-    padding: 10,
-    borderRadius: 5,
+    padding: 12,  // Tamaño de padding moderado
+    borderRadius: 8,  // Bordes redondeados
     flex: 1,  
-    marginHorizontal: 5,  
+    marginHorizontal: 8,  // Espaciado entre botones
+    justifyContent: 'center', 
   },
   footerButtonText: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 16,  // Tamaño de texto moderado
   },
 });
 
