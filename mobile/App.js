@@ -63,7 +63,7 @@ export default function App() {
           }}
         />
 
-        {/* Agregar la pantalla de Alfabeto */}
+       
         <Stack.Screen
           name="Alfabeto"
           component={Alfabeto}
