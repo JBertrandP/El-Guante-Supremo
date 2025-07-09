@@ -8,49 +8,63 @@ const Login = ({ navigation }) => {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
 
-  
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
 
-  
   const handleLogin = async () => {
-   
     if (!loginEmail || !loginPassword) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
 
-    
-    if (validateEmail(loginEmail) && !loginEmail.includes('@')) {
+    if (!validateEmail(loginEmail)) {
       Alert.alert('Error', 'Por favor, ingresa un correo electrónico válido');
       return;
     }
 
- 
     if (loginPassword.length < 8) {
       Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres');
       return;
     }
 
     try {
-      
-      const response = await axios.post('http://10.100.1.68:8000/login', {
-        email: loginEmail,
-        password: loginPassword,
+     
+      const formData = new URLSearchParams();
+      formData.append('username', loginEmail); 
+      formData.append('password', loginPassword); 
+
+      const response = await axios.post('http://10.100.1.68:8000/login', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        timeout: 10000,  
       });
 
-      if (response.data.success) {
+      console.log('Respuesta del servidor:', response.data);
+
+      const { access_token } = response.data;
+
+      if (access_token) {
         Alert.alert('Éxito', 'Iniciando sesión...');
         navigation.navigate('Home'); 
       } else {
-        Alert.alert('Error', 'Correo o contraseña incorrectos');
+        Alert.alert('Error', 'Usuario o contraseña incorrectos');
       }
     } catch (error) {
-     
-      console.error(error);
-      Alert.alert('Error', 'Hubo un problema al iniciar sesión, por favor intenta nuevamente');
+      console.error('Error en la solicitud:', error); 
+
+      if (error.response) {
+        console.error('Respuesta del servidor:', error.response);
+        Alert.alert('Error', error.response.data.message || 'Hubo un problema al iniciar sesión, por favor intenta nuevamente');
+      } else if (error.request) {
+        console.error('No se recibió respuesta del servidor:', error.request);
+        Alert.alert('Error', 'No se recibió respuesta del servidor');
+      } else {
+        console.error('Error desconocido:', error.message);
+        Alert.alert('Error', 'Hubo un problema al iniciar sesión, por favor intenta nuevamente');
+      }
     }
   };
 
@@ -61,12 +75,11 @@ const Login = ({ navigation }) => {
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
-        {/* Logo */}
+        
         <Image
           source={require('./assets/logo.png')}
           style={styles.logo}
         />
-        
         
         <TextInput
           style={styles.input}
@@ -77,7 +90,6 @@ const Login = ({ navigation }) => {
           onChangeText={setLoginEmail}
         />
         
-       
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
@@ -87,7 +99,6 @@ const Login = ({ navigation }) => {
           onChangeText={setLoginPassword}
         />
         
-        
         <View style={styles.buttonContainer}>
           <Button
             title="Iniciar sesión"
@@ -96,7 +107,6 @@ const Login = ({ navigation }) => {
           />
         </View>
 
-        
         <View style={styles.buttonContainer}>
           <Button
             title="No tienes cuenta, crea una"

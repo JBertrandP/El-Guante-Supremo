@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native'; 
+
 const HomePage = () => {
   const navigation = useNavigation();
 
@@ -19,7 +20,6 @@ const HomePage = () => {
           <Text style={styles.footerButtonText}>Traductor</Text>
         </TouchableOpacity>
 
-        
         <TouchableOpacity 
           style={styles.footerButton} 
           onPress={() => navigation.navigate('Alfabeto')} 
@@ -32,6 +32,12 @@ const HomePage = () => {
           <FontAwesome5 name="book" size={24} color="white" />
           <Text style={styles.footerButtonText}>Diccionario</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.footerButton}>
+          <FontAwesome5 name="bluetooth" size={24} color="white" />
+          <Text style={styles.footerButtonText}>Agregar Dispositivo</Text>
+        </TouchableOpacity>
+        
       </View>
     </View>
   );
@@ -72,6 +78,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#054F7A',
     padding: 10,
     borderRadius: 5,
+    flex: 1,  
+    marginHorizontal: 5,  
   },
   footerButtonText: {
     color: '#FFFFFF',
