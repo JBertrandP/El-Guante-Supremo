@@ -1,18 +1,24 @@
-from typing import Annotated
-from fastapi import FastAPI, Form, Request, status
-from contextlib import asynccontextmanager
-
+# Importa las dependencias necesarias
+from fastapi import Depends, FastAPI, Request, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 
+from contextlib import asynccontextmanager
+
+from typing import Annotated
+
+from pydantic import BaseModel, EmailStr, Field
+# Importa las dependencias de la base de datos y utilidades
 from db_models import Database
-from pydantic import BaseModel, EmailStr
+from utils import hash_password, verify_password, create_access_token, get_optional_user
 
-from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
-# Se variablizan las rutas de las plantillas y archivos estáticos
-
+#se crea la instancia la conexión a la base de datos MongoDB
 db = Database()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -20,121 +26,83 @@ async def lifespan(app: FastAPI):
     await db.start()
     print(" MongoDB conectado correctamente")
     
-    yield  # ⏸ Aquí se ejecuta la app
+    yield  # Aquí se ejecuta la app
 
     #  Al apagar la app
-    db.close()
+    await db.close()
     print(" MongoDB desconectado")
 
-#se crea la instancia la conexión a la base de datos MongoDB y de FastAPI
+#se crea la instancia de FastAPI
 app = FastAPI(lifespan=lifespan)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 class User(BaseModel):
-    full_name: str
+    full_name: Annotated[str, Field(min_length=3, max_length=50)]
     email: EmailStr
-    password: str
-
+    password: Annotated[str, Field(min_length=8, max_length=30)]  
+    
 # Configuración de CORS
+origins = ["*"  # Permitir todas las orígenes
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Permitir todas las orígenes
+    allow_origins=origins,  # Permitir todas las orígenes
     allow_credentials=True,
     allow_methods=["*"],  # Permitir todos los métodos HTTP
     allow_headers=["*"],  # Permitir todos los encabezados
 )
 
-from utils import render
-
 @app.get("/")
-async def root(request: Request):
+async def root(user=Depends(get_optional_user)):
     """
     Endpoint raíz que devuelve un mensaje de bienvenida.
     """
-    return render(request, "index.html", {"message": "Bienvenido a la API de FastAPI con MongoDB"})
+    if not user:
+        return {"message": "Por favor, inicia sesión para acceder a la API."}
+    return {"message": "Bienvenido a la API de FastAPI con MongoDB", "user": user}
+    
+@app.get("/users/me")
+async def get_current_user(user=Depends(get_optional_user)):
+    """Endpoint para obtener el usuario actual.
+    Si no hay usuario autenticado, devuelve un error 401.
+    """ 
+    if not user:
+        raise HTTPException(status_code=401, detail="No autenticado")
+    return {"user": user}
 
 @app.post("/signup")
-async def signup(
-                request: Request,
-                full_name: Annotated[str, Form()],
-                email: Annotated[EmailStr, Form()],
-                password: Annotated[str, Form()]):
-    """
-    Endpoint para registrar un nuevo usuario.
-    """
-    response = RedirectResponse(url="/login", status_code=303)
+async def signup(data: User):
+    # Verifica si ya existe un usuario con ese correo
+    existing_user = await db.find_one(os.getenv("user_collection"), {"email": data.email})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="El correo ya está registrado.")
+    # Hashea la contraseña
+    hashed_pw = hash_password(data.password)
+    # Inserta el nuevo usuario
+    result = await db.insert_one(os.getenv("user_collection"), {    
+        "full_name": data.full_name,
+        "email": data.email,
+        "password": hashed_pw,
+    })
+    if not result.inserted_id:
+        raise HTTPException(status_code=500, detail="Error al registrar el usuario.")
+    return {"mensaje": "Usuario registrado correctamente"}
 
-    response.set_cookie(key="mensaje", value="Has+sido+registrado+correctamente")
-    # Validación de los campos obligatorios
-    if not full_name or not email or not password:
-        return render(
-            "signup.html",
-            {
-                "request": request,
-                "mensaje": "Todos los campos son obligatorios"
-            },
-            status_code=status.HTTP_400_BAD_REQUEST
-        )
-    
-    database_response = db.insert_one(
-        "users",
-        {
-            "full_name": full_name,
-            "email": email,
-            "password": password
-        }
-    )
-    if not database_response:
-        return render(
-            "signup.html",
-            {
-                "request": request,
-                "mensaje": "Error al registrar el usuario. Inténtalo de nuevo."
-            },
-            status_code=status.HTTP_500_BAD_REQUEST
-        )
-    return response
 
 @app.post("/login")
-async def login(
-    request: Request,
-    email: Annotated[str, Form()],
-    password: Annotated[str, Form()]
-):
-    """
-    Endpoint para iniciar sesión.
-    """
-    mensaje = request.cookies.get("mensaje")
-    if mensaje:
-        response = render(
-            "login.html",
-            {
-                "request": request,
-                "mensaje": mensaje
-            },
-            status_code=status.HTTP_200_OK
-        )
-        response.delete_cookie("mensaje")
-        return response 
-    user = db.find_one("users", {"email": email, "password": password})
-    if not user:
-        return render(
-            "login.html",
-            {
-                "request": request,
-                "mensaje": "Credenciales inválidas"
-            },
-            status_code=status.HTTP_401_UNAUTHORIZED
-        )
-    response = RedirectResponse(url="/", status_code=303)
-    response.set_cookie(key="user_id", value=str(user["_id"]))
-    return response
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    user = await db.find_one(os.getenv("user_collection"), {"email": form_data.username})
+    print(user)
+    if not user or not verify_password(form_data.password, user["password"]):
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+
+    token = create_access_token(data={"sub": user["email"]})
+    return {"Response":"Has sido logueado correctamente", "access_token": token, "token_type": "bearer"}
 
 
-
-
-
-
+@app.get("/dictionary")
+async def dictionary():
+    print("hola")
 
 
 
@@ -150,7 +118,6 @@ async def ping():
     try:
         await db.ping()
         print(db.client.server_info())
-        db.find_all("capitulo")
         return {"message": "Conexión a la base de datos exitosa", "status": "ok"}
 
     except Exception as e:
@@ -168,5 +135,19 @@ def info(request: Request):
 
 if __name__ == "__main__":
     import uvicorn 
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    import subprocess
+    import re
+
+    # Ejecutar 'ipconfig' en Windows
+    resultado = subprocess.run("ipconfig", shell=True, capture_output=True, text=True, encoding="cp850")
+    # Buscar IP usando 'Direcci' + cualquier caracter (como ¢ o ó)
+    ips = re.findall(r"Direcci.{0,3}n IPv4[^\d]*(\d+\.\d+\.\d+\.\d+)", resultado.stdout)
+
+    for ip in ips:
+        print("Tu IP local es:", ip)
+
+    
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
     # Para ejecutar el servidor, usa el comando: uvicorn main:app --reload en caso que no se ejecute automáticamente
+
+    #En el navegador de el frontend ingresa http: 10.100.0.19:8000

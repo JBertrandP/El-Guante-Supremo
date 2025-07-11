@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native'; // Importar useNavigation para la navegación
+import { useNavigation } from '@react-navigation/native'; 
 
 const HomePage = () => {
-  const navigation = useNavigation(); // Crear la referencia de navegación
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -20,10 +20,9 @@ const HomePage = () => {
           <Text style={styles.footerButtonText}>Traductor</Text>
         </TouchableOpacity>
 
-        {/* Botón que navega a la pantalla Alfabeto */}
         <TouchableOpacity 
           style={styles.footerButton} 
-          onPress={() => navigation.navigate('Alfabeto')} // Navegar a la pantalla Alfabeto
+          onPress={() => navigation.navigate('Alfabeto')} 
         >
           <Ionicons name="text-outline" size={24} color="white" /> 
           <Text style={styles.footerButtonText}>Alfabeto</Text>
@@ -33,6 +32,7 @@ const HomePage = () => {
           <FontAwesome5 name="book" size={24} color="white" />
           <Text style={styles.footerButtonText}>Diccionario</Text>
         </TouchableOpacity>
+
       </View>
     </View>
   );
@@ -65,18 +65,21 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     bottom: 0,
-    padding: 10,
+    padding: 10,  // Mantén el padding moderado
     backgroundColor: 'rgba(7, 106, 163, 0.8)', 
   },
   footerButton: {
     alignItems: 'center',
     backgroundColor: '#054F7A',
-    padding: 10,
-    borderRadius: 5,
+    padding: 12,  // Tamaño de padding moderado
+    borderRadius: 8,  // Bordes redondeados
+    flex: 1,  
+    marginHorizontal: 8,  // Espaciado entre botones
+    justifyContent: 'center', 
   },
   footerButtonText: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 16,  // Tamaño de texto moderado
   },
 });
 
