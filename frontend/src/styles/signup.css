@@ -1,0 +1,129 @@
+@font-face{
+  font-family: 'Burgundia';
+  src: url('../assets/fonts/Burgundia.woff2') format('woff2');
+  font-weight: normal;
+    font-style: normal;
+}
+
+@keyframes cambioColorFondo {
+  0% {
+    background-color: #054F7A;
+  }
+  25% {
+    background-color: #076DA8;
+  }
+  50% {
+    background-color: #0887D1;
+  }
+  75%{
+    background-color: #076DA8;
+  }
+  100% {
+    background-color: #054F7A;
+  }
+}
+
+@keyframes signup-enter {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes signup-exit {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(45%);
+    opacity: 0;
+  }
+}
+/*-----------------------------------------------------------------------*/
+
+.signup-enter{
+  animation: signup-enter 0.8s ease-in;
+}
+
+.signup-exit {
+  animation: signup-exit 0.5s ease-out forwards;
+}
+
+/*-----------------------------------------------------------------------*/
+
+.signup-body {
+  min-height: 100vh;
+  animation: cambioColorFondo 5s infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 420px;
+}
+
+.signup-card h2 {
+  margin-bottom: 24px;
+  color: #054f7a;
+  text-align: center;
+  font-family: 'Burgundia', sans-serif;
+}
+
+.signup-card form input {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-bottom: 2px solid #054f7a;
+  font-family:'Times New Roman', Times, serif;
+  font-size: 16px;
+  color: #000000;
+}
+
+.signup-card form input:focus {
+  outline: none;
+}
+
+.signup-card button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background-color: #33aaee;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Burgundia', sans-serif;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.signup-card button:hover {
+  background-color: #076aa3;
+}
+
+.login-link {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 50px;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.9em;
+}
+
+.login-link a {
+  color: #076aa3;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}

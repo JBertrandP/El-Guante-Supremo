@@ -1,0 +1,5 @@
+pip install "python-jose[cryptography]"
+pip install "fastapi[all]"
+pip install "uvicorn[standard]"
+pip install bcrypt==3.2.0
+pip install "passlib[bcrypt]"
