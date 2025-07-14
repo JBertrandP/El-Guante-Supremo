@@ -89,17 +89,26 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     return {"Response":"Has sido logueado correctamente", "access_token": token, "token_type": "bearer"}
 
 
-@app.get("/alphabet")
+@app.get("/alphabet_ids")
 async def alphabet():
-    alphabet = await db.find_all(os.getenv("alphabet_collection"))
-    
-@app.get("/dictionary")
-async def dictionary():
-    print("hola")
+    alphabet = await db.find_all_specific(os.getenv("alphabet_collection"), {"_id": 1, "letter": 1})
+    if not alphabet:
+        raise HTTPException(status_code=404, detail="No se encontraron letras en la base de datos.")
+    return {"alphabet": alphabet}
 
+@app.get("/alphabet/{letter_id}")
+async def alphabet(letter_id: str):
+    alphabet = await db.find_one(os.getenv("alphabet_collection"), {"_id": letter_id})
+    if not alphabet:
+        raise HTTPException(status_code=404, detail="No se encontraron letras en la base de datos.")
+    return {"alphabet": alphabet}
 
-
-
+@app.get("/dictionary/{page}")
+async def dictionary(page: int):
+    dictionary = await db.find_some(os.getenv("dictionary_collection"), 10, (page - 1) * 10)
+    if not dictionary:
+        raise HTTPException(status_code=404, detail="No se encontraron palabras en la base de datos.")
+    return {"dictionary": dictionary}
 
 
 #esta parte son pruebas

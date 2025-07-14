@@ -90,6 +90,57 @@ class Database:
             return None
         
     
+        
+    def find_all_specific(self, collection_name, query=None, projection=None):    
+        """
+        Busca todos los documentos en una colección de la base de datos MongoDB.
+        Permite aplicar un filtro (query) y una proyección (campos a incluir o excluir).
+        collection_name = "usuarios", query = {}/{"ciudad": "Madrid"}, projection = {"nombre": 1, "ciudad": 1, "_id": 0} if you want to include only specific fields select 1.
+        """
+        try:
+            collection = self.get_collection(collection_name)
+            if collection is None:
+                return None
+            if query and projection:
+                return collection.find(query, projection)
+            elif query:
+                return collection.find(query)
+            elif projection:
+                return collection.find({}, projection)
+            else:
+                return collection.find()
+        except Exception as e:
+            print(f"Error al buscar documentos: {e}")
+            return None
+    
+    def find_some(self, collection_name, limit=10, start=0):    
+        """
+        Busca algunos documentos en una colección de la base de datos MongoDB.
+        Permite aplicar un límite de resultados, así como un punto de inicio.
+        collection_name = "usuarios", query = {}/{"ciudad": "Madrid"}, limit = 10, start = 0
+        """
+        try:
+            collection = self.get_collection(collection_name)
+            if collection is None:
+                return None
+            return collection.find().limit(limit).skip(start)
+        except Exception as e:
+            print(f"Error al buscar documentos: {e}")
+            return None
+        
+    def find_all(self, collection_name):    
+        """
+        Busca todos los documentos en una colección de la base de datos MongoDB.
+        """
+        try:
+            collection = self.get_collection(collection_name)
+            if collection is None:
+                return None
+            return collection.find()
+        except Exception as e:
+            print(f"Error al buscar documentos: {e}")
+            return None
+
 
     def update_one(self, collection_name, query, update):
         """
