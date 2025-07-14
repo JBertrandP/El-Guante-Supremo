@@ -7,7 +7,7 @@ import PantallaPrincipal from './views/splash_screen';
 // import SignUp from './views/sign_up'; // Desactivado temporalmente
 import Home from './views/HomePage';  
 import Alfabeto from './views/Alfabeto'; 
-import BtScreen from './views/BT.JS'; // Asegúrate de que este archivo exista y esté correctamente exportado
+import BtScreen from './views/BT.JS'; 
 
 
 const Stack = createStackNavigator();

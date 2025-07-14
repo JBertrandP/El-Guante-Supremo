@@ -11,20 +11,20 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { BleManager } from 'react-native-ble-plx';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 const manager = new BleManager();
 
-export default function BtScreen() {
+export default function BluetoothScreen() {
   const [devices, setDevices] = useState([]);
   const [connectedDevice, setConnectedDevice] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
 
   useEffect(() => {
+    restoreLastDevice();
     startScan();
-    return () => {
-      manager.stopDeviceScan();
-    };
+    return () => manager.stopDeviceScan();
   }, []);
 
   const startScan = async () => {
@@ -46,7 +46,17 @@ export default function BtScreen() {
         return;
       }
 
-      if (device && device.name && !devices.some(d => d.id === device.id)) {
+      if (
+        device &&
+        device.name &&
+        !devices.some(d => d.id === device.id) &&
+        (
+          device.name.includes('ESP') ||
+          device.name.includes('Sensor') ||
+          device.name.includes('BT') ||
+          device.name.includes('BLE')
+        )
+      ) {
         setDevices(prev => [...prev, device]);
       }
     });
@@ -54,7 +64,7 @@ export default function BtScreen() {
     setTimeout(() => {
       manager.stopDeviceScan();
       setIsScanning(false);
-    }, 8000); // Detiene escaneo después de 8 segundos
+    }, 8000);
   };
 
   const connectToDevice = async (device) => {
@@ -62,10 +72,34 @@ export default function BtScreen() {
       const connected = await manager.connectToDevice(device.id);
       await connected.discoverAllServicesAndCharacteristics();
       setConnectedDevice(connected);
+      await AsyncStorage.setItem('@lastDeviceId', device.id);
       alert(`✅ Conectado a ${connected.name}`);
     } catch (e) {
       console.log('Error al conectar:', e);
     }
+  };
+
+  const restoreLastDevice = async () => {
+    const lastId = await AsyncStorage.getItem('@lastDeviceId');
+    if (lastId) {
+      try {
+        const device = await manager.connectToDevice(lastId);
+        await device.discoverAllServicesAndCharacteristics();
+        setConnectedDevice(device);
+        alert(`🔁 Reconectado a ${device.name}`);
+      } catch (e) {
+        console.log('No se pudo reconectar:', e);
+      }
+    }
+  };
+
+  const getDeviceIcon = (name) => {
+    if (name.includes('ESP')) return '⚙️';
+    if (name.toLowerCase().includes('sensor')) return '📡';
+    if (name.toLowerCase().includes('head')) return '🎧';
+    if (name.toLowerCase().includes('phone')) return '📱';
+    if (name.toLowerCase().includes('watch')) return '⌚';
+    return '🔵';
   };
 
   return (
@@ -88,7 +122,9 @@ export default function BtScreen() {
             style={styles.device}
             onPress={() => connectToDevice(item)}
           >
-            <Text style={styles.name}>{item.name}</Text>
+            <Text style={styles.name}>
+              {getDeviceIcon(item.name)} {item.name}
+            </Text>
             <Text style={styles.id}>{item.id}</Text>
           </TouchableOpacity>
         )}

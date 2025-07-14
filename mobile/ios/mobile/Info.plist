@@ -42,6 +42,9 @@
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleDefault</string>
 	<key>UISupportedInterfaceOrientations</key>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+<string>La app necesita Bluetooth para conectarse con el dispositivo ESP32</string>
+
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
