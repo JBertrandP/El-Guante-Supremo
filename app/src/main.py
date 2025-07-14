@@ -150,4 +150,4 @@ if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
     # Para ejecutar el servidor, usa el comando: uvicorn main:app --reload en caso que no se ejecute automáticamente
 
-    #En el navegador de el frontend ingresa http: 10.100.0.19:8000
+    #En el navegador de el frontend ingresa http: 10.100.x.x:8000
