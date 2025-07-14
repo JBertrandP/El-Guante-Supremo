@@ -83,10 +83,13 @@ class Database:
             collection = self.get_collection(collection_name)
             if collection is None:
                 return None
+            
             return collection.find(query) if query else collection.find()
         except Exception as e:
             print(f"Error al buscar documentos: {e}")
             return None
+        
+    
 
     def update_one(self, collection_name, query, update):
         """

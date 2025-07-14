@@ -5,12 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from contextlib import asynccontextmanager
 
-from typing import Annotated
-
-from pydantic import BaseModel, EmailStr, Field
 # Importa las dependencias de la base de datos y utilidades
-from db_models import Database
-from utils import hash_password, verify_password, create_access_token, get_optional_user
+from app.src.database.db_models import Database
+from app.src.utils.utils import hash_password, verify_password, create_access_token, get_optional_user
+from models.UserModel import User
 
 from dotenv import load_dotenv
 import os
@@ -19,15 +17,12 @@ load_dotenv()
 #se crea la instancia la conexión a la base de datos MongoDB
 db = Database()
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Al iniciar la app
     await db.start()
     print(" MongoDB conectado correctamente")
-    
     yield  # Aquí se ejecuta la app
-
     #  Al apagar la app
     await db.close()
     print(" MongoDB desconectado")
@@ -35,14 +30,8 @@ async def lifespan(app: FastAPI):
 #se crea la instancia de FastAPI
 app = FastAPI(lifespan=lifespan)
 
-class User(BaseModel):
-    full_name: Annotated[str, Field(min_length=3, max_length=50)]
-    email: EmailStr
-    password: Annotated[str, Field(min_length=8, max_length=30)]  
-    
 # Configuración de CORS
-origins = ["*"  # Permitir todas las orígenes
-]
+origins = ["*"] # Permitir todas las orígenes
 
 app.add_middleware(
     CORSMiddleware,
@@ -100,6 +89,10 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     return {"Response":"Has sido logueado correctamente", "access_token": token, "token_type": "bearer"}
 
 
+@app.get("/alphabet")
+async def alphabet():
+    alphabet = await db.find_all(os.getenv("alphabet_collection"))
+    
 @app.get("/dictionary")
 async def dictionary():
     print("hola")
