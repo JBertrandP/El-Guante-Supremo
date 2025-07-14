@@ -5,6 +5,8 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from './pages/login';
 import Signup from './pages/signup';
+import 'animate.css';
+
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

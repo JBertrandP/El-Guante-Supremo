@@ -1,26 +1,125 @@
-import {Link} from 'react-router-dom'
+import { useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import '../styles/login.css';
 
-function Login(){
-    return(
-        <div className='login-body'>
-            <h2>Iniciar Sesión</h2>
+function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const cardRef = useRef();
 
-            <br></br>
+  //validar email
+  const validateEmail = (email) => {
+    const emailRegex = /^[\w.-]+@[\w.-]+\.\w{2,6}$/;
+    return emailRegex.test(email);
+  };
 
-            <div className='card'>
-                <form className='login-form'>
-                    <p><label>Ingrese correo electrónico</label></p>
-                    <p><input type='email' required></input></p>
-                    <p><label>Ingrese contraseña</label></p>
-                    <p><input type='password' required></input></p>
-                </form>
+  //enviar formulario
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    if (!email || !password) {
+      setError('Todos los campos son obligatorios');
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      setError('Correo electrónico inválido');
+      return;
+    }
+
+    if (password.length < 8) {
+      setError('La contraseña debe tener al menos 8 caracteres');
+      return;
+    }
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append('username', email);
+      formData.append('password', password);
+
+      const response = await axios.post('http://10.100.1.68:8000/login', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      const { access_token } = response.data;
+
+      if (access_token) {
+        alert('¡Inicio de sesión exitoso!');
+        //guardar el token
+        localStorage.setItem('token', access_token);
+        navigate('/'); 
+      } else {
+        setError('Usuario o contraseña incorrectos');
+      }
+
+    } catch (err) {
+      console.error('Error en login:', err);
+      const mensaje = err?.response?.data?.message || 'Error al iniciar sesión. Intenta de nuevo.';
+      setError(mensaje);
+    }
+  };
+
+  //manejar anjimciones
+  const handleGoToSignup = (e) => {
+    e.preventDefault();
+    const card = cardRef.current;
+    if(card){
+      card.classList.add('login-exit');
+
+      card.addEventListener(
+        'animationend',
+        () => {
+          navigate('/signup');
+        },
+        {once: true}
+      );
+    }
+  };
+
+  return (
+    <div className='login-body'>
+      <div className='card login-enter' ref={cardRef}>
+        <h2>Iniciar Sesión</h2>
+        <br></br>
+        <form className='login-form' onSubmit={handleSubmit}>
+          <p>
+            <input
+            placeholder='Ingrese correo electónico'
+            type='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            />
+          </p>
+          <p>
+            <input
+            placeholder='Ingrese contraseña'
+              type='password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </p>
+
+          {error && (
+            <div className="alert alert-danger" role="alert">
+              {error}
             </div>
-            <br></br>
-            <button type='submit'>Entrar</button>
-            <br></br>
-            <p>¿Aún no tienes una cuenta? <Link to="/login">Crear cuenta</Link></p>
-        </div>
-    );
+          )}
+
+          <br />
+          <button type='submit'>Entrar</button>
+          <p className='signup-link'>¿Aún no tienes una cuenta? <a href='/signup' onClick={handleGoToSignup}>Crear cuenta</a></p>
+        </form>
+      </div>
+    </div>
+  );
 }
 
 export default Login;

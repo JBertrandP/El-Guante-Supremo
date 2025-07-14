@@ -1,0 +1,129 @@
+@font-face{
+  font-family: 'Burgundia';
+  src: url('../assets/fonts/Burgundia.woff2') format('woff2');
+  font-weight: normal;
+    font-style: normal;
+}
+
+@keyframes cambioColorFondo {
+  0% {
+    background-color: #0887D1;
+  }
+  25% {
+    background-color: #076DA8;
+  }
+  50% {
+    background-color: #054F7A;
+  }
+  75%{
+    background-color: #076DA8;
+  }
+  100% {
+    background-color: #0887D1;
+  }
+}
+
+@keyframes login-enter {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes login-exit {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(45%);
+    opacity: 0;
+  }
+}
+
+/*-------------------------------------------------------*/
+.login-enter{
+  animation: login-enter 0.5s ease-in forwards;
+}
+
+.login-exit {
+  animation: login-exit 0.8s ease-out forwards;
+}
+
+/*-------------------------------------------------------------*/
+
+.login-body {
+  min-height: 100vh;
+  animation: cambioColorFondo 5s infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 420px;
+}
+
+.card h2 {
+  margin-bottom: 24px;
+  color: #054f7a;
+  text-align: center;
+  font-family: 'Burgundia', sans-serif;
+}
+
+.card form input {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-bottom: 2px solid #054f7a;
+  font-family:'Times New Roman', Times, serif;
+  font-size: 16px;
+  color: #000000;
+}
+
+.card form input:focus {
+  outline: none;
+}
+
+.card button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background-color: #33aaee;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Burgundia', sans-serif;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.card button:hover {
+  background-color: #076aa3;
+}
+
+.signup-link {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 50px;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 0.9em;
+}
+
+.signup-link a {
+  color: #076aa3;
+  text-decoration: none;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
