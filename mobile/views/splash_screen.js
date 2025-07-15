@@ -8,7 +8,7 @@ const PantallaPrincipal = ({ navigation }) => {
   
     const timer = setTimeout(() => {
       navigation.replace('Home'); 
-    }, 3000);
+    }, 5000);
 
 
     return () => clearTimeout(timer);
