@@ -7,8 +7,6 @@ import PantallaPrincipal from './views/splash_screen';
 // import SignUp from './views/sign_up'; // Desactivado temporalmente
 import Home from './views/HomePage';  
 import Alfabeto from './views/Alfabeto'; 
-import BtScreen from './views/BT.JS'; 
-
 
 const Stack = createStackNavigator();
 
@@ -35,7 +33,7 @@ export default function App() {
               fontSize: 22,
             },
           }}
-        />
+        /> 
 
         <Stack.Screen
           name="SignUp"
@@ -80,6 +78,10 @@ export default function App() {
             },
           }}
         />
+
+        
+        
+        
       </Stack.Navigator>
 
       <StatusBar style="auto" />
