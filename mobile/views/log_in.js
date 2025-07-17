@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
-import axios from 'axios'; 
+import axios from 'axios';
 
-const { width, height } = Dimensions.get('window');  
+
+const { width, height } = Dimensions.get('window');
+
+
+const API_URL = Constants.manifest.extra.API_URL;
 
 const Login = ({ navigation }) => {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
 
-  const validateEmail = (email) => {
+  const validateEmail = (email) => {  
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
@@ -30,12 +34,11 @@ const Login = ({ navigation }) => {
     }
 
     try {
-     
       const formData = new URLSearchParams();
       formData.append('username', loginEmail); 
       formData.append('password', loginPassword); 
 
-      const response = await axios.post('http://10.100.1.68:8000/login', formData, {
+      const response = await axios.post(`${API_URL}/login`, formData, { 
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
