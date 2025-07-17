@@ -6,8 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
 # Importa las dependencias de la base de datos y utilidades
-from app.src.database.db_models import Database
-from app.src.utils.utils import hash_password, verify_password, create_access_token, get_optional_user
+from database.db_models import Database
+from utils.utils import hash_password, verify_password, create_access_token, get_optional_user
 from models.UserModel import User
 
 from dotenv import load_dotenv
