@@ -4,6 +4,7 @@ import axios from 'axios';
 import '../styles/login.css';
 
 function Login() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -41,11 +42,12 @@ function Login() {
       formData.append('username', email);
       formData.append('password', password);
 
-      const response = await axios.post('http://10.100.1.68:8000/login', formData, {
+      const response = await axios.post(`${API_URL}/login`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
+      console.log(`${API_URL}/login`)
 
       const { access_token } = response.data;
 

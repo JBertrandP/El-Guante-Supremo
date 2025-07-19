@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/signup.css';
 
 function Signup() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,11 +43,12 @@ function Signup() {
     formData.append('password', password);
 
     try {
-      const response = await axios.post('http://10.100.1.68:8000/signup', {
+      const response = await axios.post(`${API_URL}/signup`, {
         full_name: name,
         email: email,
         password: password,
       });
+      console.log(`${API_URL}/signup`);
 
       navigate('/');
 
@@ -116,11 +118,6 @@ function Signup() {
           <button type="submit">Registrarse</button>
 
           {error && <div className="alert alert-danger mt-3">{error}</div>}
-          {success && (
-            <div className="alert alert-success mt-3">
-              Registro exitoso 🎉
-            </div>
-          )}
 
           <p className="login-link">¿Ya tienes cuenta? <a href="/login" onClick={handleGoToLogin}>Iniciar sesión</a></p>
         </form>
