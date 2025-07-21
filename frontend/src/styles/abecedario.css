@@ -1,0 +1,188 @@
+@font-face {
+  font-family: 'Burgundia';
+  src: url('../assets/fonts/Burgundia.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@keyframes flip-abc{
+    35%{
+        transform: rotateX(360deg);
+    }
+    100%{
+        transform: rotateX(360deg);
+    }
+}
+
+/*--------------------------NORMAL--------------------------------*/
+.layout-abc{
+    display: grid;
+    min-height: 100vh;
+    grid-template-rows: auto 1fr auto;
+}
+
+.main{
+    margin: 0;
+    padding: 0;
+}
+
+/*-------------------------BANNER-----------------------------------*/
+.banner-abc{
+    height: 91vh;
+    background-image: linear-gradient(to bottom right, #26475a, #4996c3);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Burgundia', serif;
+    padding: 2rem;
+}
+
+.loader{
+    perspective: 900px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.loader > span{
+    color: #ffffff;
+    font-size: 70px;
+    display: inline-block;
+    animation: flip-abc 2.6s infinite linear;
+    transform-origin: 0 50%;
+    transform-style: preserve-3d;
+}
+
+.loader > span:nth-child(2){
+    animation-delay: 0.3s;
+}
+
+.loader > span:nth-child(3){
+    animation-delay: 0.6s;
+}
+
+.loader > span:nth-child(4){
+    animation-delay: 0.9s;
+}
+
+.loader > span:nth-child(5){
+    animation-delay: 1.2s;
+}
+
+.loader > span:nth-child(6){
+    animation-delay: 1.5s;
+}
+
+.loader > span:nth-child(7){
+    animation-delay: 1.8s;
+}
+
+.loader > span:nth-child(8){
+    animation-delay: 2.1s;
+}
+
+.loader > span:nth-child(9){
+    animation-delay: 2.4s;
+}
+
+.loader > span:nth-child(10){
+    animation-delay: 2.7s;
+}
+
+.abajo-abc {
+  display: inline-block;
+  margin-top: 2rem;
+  color: #ffff;
+  text-decoration: none;
+}
+
+/*----------------------------ABECEDARIO GRID------------------------*/
+.abecedario{
+    background-image: linear-gradient(to bottom right, #26475a, #4996c3);
+    width: 100%;
+    min-height: 100vh;
+    padding: 7rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.titulo-abc {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.titulo-abc p {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 25px;
+  color: #ffffff;
+}
+
+.main-grid-abc{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    max-width: 90%;
+}
+
+.grid-abc {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-abc {
+    background-color: #ffffff;
+    color: #054F7A;
+    border: none;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-size: 35px;
+    width: 100px;
+    height: 100px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.btn-abc:hover {
+  background-color: #95c1de;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+/*---------------------------MODAL-------------------------*/
+.modal-abc-title{
+    font-family: 'Burgundia', serif;
+    font-size: 20px;
+    color: #076aa3;
+    text-align: center;
+}
+
+.modal-img-abc {
+    display: block;
+    max-width: 70%;
+    height: auto;
+    margin: 0 auto 1rem auto; 
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal-abc-text {
+    text-align: left;
+    font-family: 'Times New Roman', Times, serif; 
+    font-size: 18px;
+    color: #033552;
+    line-height: 1.6;
+}
+
+.modal-btn-close{
+    background-color: #076aa3;
+    color: #ffffff;
+    font-family: 'Burgundia', serif;
+    font-size: 16px;
+}

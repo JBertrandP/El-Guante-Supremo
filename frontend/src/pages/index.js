@@ -8,15 +8,16 @@ import guante from '../assets/images/guante2.0.png'
 
 function Index(){
   return(
-    <div className="layout">
+    <div className="layout-index">
       <CustomNavbar />
 
       <main>
-        <div className='banner'>
+        <div className='banner-index'>
           <picture><img className='logo' src={mano} alt='mano'></img></picture>
           <p className='slogan'>Conoce más</p>
           <a className='abajo' type='button' href='#guante'>
-            <i className="fas fa-chevron-down fa-lg"></i></a>
+            <i className="fas fa-chevron-down fa-lg"></i>
+          </a>
         </div>
 
         <div className='guante' id='guante'>

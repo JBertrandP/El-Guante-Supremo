@@ -15,7 +15,7 @@
 }
 
 /*------------------------------------------------------------*/
-.layout {
+.layout-index {
   display: grid;
   min-height: 100vh;
   grid-template-rows: auto 1fr auto;
@@ -27,7 +27,7 @@ main {
 }
 
 /*------------------------Banner de inicio----------------------------*/
-.banner{
+.banner-index{
   background-image: linear-gradient(to bottom right, #26475a, #4996c3);
   text-align: center;
   width: 100%;
