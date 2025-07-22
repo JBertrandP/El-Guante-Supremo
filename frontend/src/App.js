@@ -4,6 +4,7 @@ import Login from './pages/login';
 import Signup from './pages/signup';
 import Index from './pages/index' ;
 import Abecedario from './pages/abecedario';
+import Diccionario from './pages/diccionario';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path='/signup' element={<Signup />}/>
         <Route path='/' element={<Index/>}/>
         <Route path='/abecedario' element={<Abecedario/>}/>
+        <Route path='/diccionario' element={<Diccionario/>}/>
       </Routes>
     </Router>
   );

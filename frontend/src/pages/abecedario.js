@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import CustomNavbar from '../components/navbar';
 import Footer from '../components/footer';
@@ -76,7 +76,7 @@ function Abecedario() {
 
       <main>
         <div className='banner-abc'>
-          <div className='loader'>
+          <div className='loader-abc'>
             <span>A</span>
             <span>B</span>
             <span>E</span>
