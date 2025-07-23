@@ -7,7 +7,7 @@ import PantallaPrincipal from './views/splash_screen';
 // import SignUp from './views/sign_up'; // Desactivado temporalmente
 import Home from './views/HomePage';  
 import Alfabeto from './views/Alfabeto';
-import Diccionario from './views/diccionario'; // Importar el componente Diccionario
+import Diccionario from './views/diccionario'; 
 
 const Stack = createStackNavigator();
 
