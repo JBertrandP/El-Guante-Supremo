@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Platform, Dimensions } from 'react-native';
 
-// Obtener dimensiones de la pantalla
+
 const { height, width } = Dimensions.get('window');
 
 const Diccionario = () => {
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 5,
     padding: 5,
-    width: width * 0.9, // Ajustar el ancho a un porcentaje de la pantalla
+    width: width * 0.9,
     alignSelf: 'center',
   },
   searchInput: {
