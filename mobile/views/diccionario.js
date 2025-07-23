@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 15,
     borderRadius: 10,
-    width: width * 0.4, // Ajustar el ancho a un porcentaje de la pantalla
+    width: width * 0.4, 
     alignItems: 'center',
     borderWidth: 1,
     borderColor: '#054F7A',

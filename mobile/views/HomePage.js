@@ -12,11 +12,10 @@ const HomePage = () => {
     <View style={styles.container}>
       <Text style={styles.header}>Bienvenido</Text>
       <Image
-        source={require('./assets/guante2.0.png')}  
+        source={require('./assets/guante2.0.png')}
         style={styles.image}
       />
 
-    
       <TouchableOpacity style={styles.addDeviceButton}>
         <View style={styles.buttonContent}>
           <Text style={styles.addDeviceButtonText}>+ Agregar Dispositivo</Text>
@@ -29,15 +28,18 @@ const HomePage = () => {
           <Text style={styles.footerButtonText}>Traductor</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
-          style={styles.footerButton} 
-          onPress={() => navigation.navigate('Alfabeto')} 
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => navigation.navigate('Alfabeto')}
         >
-          <Ionicons name="text-outline" size={24} color="white" /> 
+          <Ionicons name="text-outline" size={24} color="white" />
           <Text style={styles.footerButtonText}>Alfabeto</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.footerButton}>
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => navigation.navigate('Diccionario')}
+        >
           <FontAwesome5 name="book" size={24} color="white" />
           <Text style={styles.footerButtonText}>Diccionario</Text>
         </TouchableOpacity>
