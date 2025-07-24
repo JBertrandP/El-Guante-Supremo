@@ -32,8 +32,6 @@ function CustomNavbar() {
               <NavDropdown.Divider></NavDropdown.Divider>
               <NavDropdown.Item href="/abecedario">Abecedario</NavDropdown.Item>
               <NavDropdown.Item href="/diccionario">Diccionario</NavDropdown.Item>
-              <NavDropdown.Divider></NavDropdown.Divider>
-              <NavDropdown.Item href="/">Nombre empresa</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="/">Sobre nosotros</Nav.Link>
           </Nav>

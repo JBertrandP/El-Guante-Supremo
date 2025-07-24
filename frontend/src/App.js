@@ -5,6 +5,7 @@ import Signup from './pages/signup';
 import Index from './pages/index' ;
 import Abecedario from './pages/abecedario';
 import Diccionario from './pages/diccionario';
+import Guante from './pages/guante';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path='/' element={<Index/>}/>
         <Route path='/abecedario' element={<Abecedario/>}/>
         <Route path='/diccionario' element={<Diccionario/>}/>
+        <Route path='/guante' element={<Guante/>}/>
       </Routes>
     </Router>
   );

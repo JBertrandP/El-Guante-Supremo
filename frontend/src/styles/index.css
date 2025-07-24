@@ -98,6 +98,17 @@ main {
   font-family: 'Times New Roman', Times, serif;
 }
 
+.navegar{
+  color: #ffffff;
+  font-size: 25px;
+  font-family: 'Times New Roman', Times, serif;
+  text-decoration: none;
+}
+
+.navegar:hover{
+  text-decoration: underline;
+}
+
 .guante-imagen{
   flex: 1;
   max-width: 300px;

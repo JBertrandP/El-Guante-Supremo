@@ -25,6 +25,8 @@ function Index(){
             <div className='guante-info'>
               <h2>Nuestro guante:</h2>
               <p>Te presentamos nuestro guante traductor de señas. Con unas cuantas señas por parte de la otra persona, podrás entenderlo todo viendo el texto aparecer en tiempo en la pantalla de tu dispositivo móvil.</p>
+              <p>¿Quieres conocer a nivel técnico nuestro guante?</p>
+              <a className='navegar' href='/guante'>Vamos <i class="fas fa-arrow-right"></i></a>
             </div>
             <div className='guante-imagen'>
               <img src={guante} alt='nuestro guante'></img>
