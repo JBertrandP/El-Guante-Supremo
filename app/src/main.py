@@ -2,18 +2,24 @@
 from fastapi import Depends, FastAPI, Request, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 from contextlib import asynccontextmanager
 
 # Importa las dependencias de la base de datos y utilidades
 from database.db_models import Database
-from utils.utils import hash_password, verify_password, create_access_token, get_optional_user
-from models.UserModel import User
+from utils.utils import hash_password, verify_password, create_access_token, get_optional_user, generar_contrasenia_aleatoria, convert_list_objectid
+from models.UserModel import User, UserUpdate
+from models.TokenModel import GoogleToken as TokenModel
+
+from bson import ObjectId
 
 from dotenv import load_dotenv
 import os
 load_dotenv()
 
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 #se crea la instancia la conexión a la base de datos MongoDB
 db = Database()
 
@@ -31,7 +37,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # Configuración de CORS
-origins = ["*"] # Permitir todas las orígenes
+origins = ["http://localhost:3000"] # Permitir todas las orígenes
 
 app.add_middleware(
     CORSMiddleware,
@@ -55,9 +61,34 @@ async def get_current_user(user=Depends(get_optional_user)):
     """Endpoint para obtener el usuario actual.
     Si no hay usuario autenticado, devuelve un error 401.
     """ 
+    user = await db.find_one(os.getenv("user_collection"), {"email": user["email"]})
     if not user:
         raise HTTPException(status_code=401, detail="No autenticado")
     return {"user": user}
+
+@app.put("/users/me/update")
+async def update_user(data: UserUpdate, user=Depends(get_optional_user)):
+    """Endpoint para actualizar el usuario actual.
+    Si no hay usuario autenticado, devuelve un error 401.
+    """
+    if not user:
+        raise HTTPException(status_code=401, detail="No autenticado")
+    print(user)
+    print(data)
+    if not data.full_name:
+        await db.update_one(os.getenv("user_collection"), {"email": user["sub"]}, 
+                            {"$set": {"password": hash_password(data.password)}})
+        return {"message": "Contraseña actualizada correctamente"}
+    if not data.password:
+        await db.update_one(os.getenv("user_collection"), {"email": user["sub"]}, 
+                            {"$set": {"full_name": data.full_name}})
+        return {"message": "Nombre actualizado correctamente"}
+
+    await db.update_one(os.getenv("user_collection"), {"email": user["sub"]}, 
+                        {"$set": {"full_name": data.full_name, 
+                                  "password": hash_password(data.password)}})
+
+    return {"message": "Información de usuario actualizada"}
 
 @app.post("/signup")
 async def signup(data: User):
@@ -77,38 +108,67 @@ async def signup(data: User):
         raise HTTPException(status_code=500, detail="Error al registrar el usuario.")
     return {"mensaje": "Usuario registrado correctamente"}
 
-
 @app.post("/login")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await db.find_one(os.getenv("user_collection"), {"email": form_data.username})
-    print(user)
     if not user or not verify_password(form_data.password, user["password"]):
         raise HTTPException(status_code=401, detail="Credenciales inválidas")
 
     token = create_access_token(data={"sub": user["email"]})
     return {"Response":"Has sido logueado correctamente", "access_token": token, "token_type": "bearer"}
 
+@app.post("/auth/google")
+async def login_google(google_token: TokenModel):
+    try:
+        idinfo = id_token.verify_oauth2_token(
+            google_token.token,
+            requests.Request(),
+            GOOGLE_CLIENT_ID
+        )
+        # Puedes usar idinfo["email"], idinfo["name"], etc.
+        # Crear o buscar usuario en base de datos aquí
+
+        user_data = {"sub": idinfo["email"]}
+        await db.insert_one(os.getenv("user_collection"), {"full_name": idinfo["name"], "email": user_data["sub"], "password": hash_password(generar_contrasenia_aleatoria())})
+        # Opcional: Generar tu propio JWT
+        token = create_access_token(user_data)
+        return {"access_token": token}
+    except ValueError as e:
+        print("Error de verificación:", e)
+        raise HTTPException(status_code=401, detail="Invalid Google token")
 
 @app.get("/alphabet_ids")
 async def alphabet():
-    alphabet = await db.find_all_specific(os.getenv("alphabet_collection"), {"_id": 1, "letter": 1})
+    cursor = db.find_all_specific(os.getenv("alphabet_collection"), query={}, projection={"_id": 1, "letter": 1})
+    results = await cursor.to_list(length=None)
+    alphabet = convert_list_objectid(results)
+
     if not alphabet:
         raise HTTPException(status_code=404, detail="No se encontraron letras en la base de datos.")
     return {"alphabet": alphabet}
 
 @app.get("/alphabet/{letter_id}")
 async def alphabet(letter_id: str):
-    alphabet = await db.find_one(os.getenv("alphabet_collection"), {"_id": letter_id})
-    if not alphabet:
+    try:
+        obj_id = ObjectId(letter_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="ID inválido")
+
+    letter_info = await db.find_one(os.getenv("alphabet_collection"), {"_id": obj_id}, projection={"_id": 0, "coordinates": 0})
+    if not letter_info:
         raise HTTPException(status_code=404, detail="No se encontraron letras en la base de datos.")
-    return {"alphabet": alphabet}
+    return {"letter_info": letter_info}
 
 @app.get("/dictionary/{page}")
 async def dictionary(page: int):
-    dictionary = await db.find_some(os.getenv("dictionary_collection"), 10, (page - 1) * 10)
+    cursor = db.find_some(os.getenv("dictionary_collection"), 10, (page - 1) * 10)
+    results = await cursor.to_list(length=None)
+    dictionary = convert_list_objectid(results)
     if not dictionary:
         raise HTTPException(status_code=404, detail="No se encontraron palabras en la base de datos.")
     return {"dictionary": dictionary}
+
+
 
 
 #esta parte son pruebas
@@ -153,3 +213,7 @@ if __name__ == "__main__":
     # Para ejecutar el servidor, usa el comando: uvicorn main:app --reload en caso que no se ejecute automáticamente
 
     #En el navegador de el frontend ingresa http: 10.100.x.x:8000
+
+
+    
+    #para utilizarlo mediante la web usar ngrok y el puerto una vez se haya ejecutado el servidor

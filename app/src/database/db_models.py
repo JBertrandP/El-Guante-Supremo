@@ -62,7 +62,7 @@ class Database:
             print(f"Error al insertar documento: {e}")
             return None
 
-    def find_one(self, collection_name, query):
+    def find_one(self, collection_name, query, projection=None):
         """
         Busca un documento en una colección de la base de datos MongoDB.
         """
@@ -70,7 +70,7 @@ class Database:
             collection = self.get_collection(collection_name)
             if collection is None:
                 return None
-            return collection.find_one(query)
+            return collection.find_one(query, projection)
         except Exception as e:
             print(f"Error al buscar documento: {e}")
             return None
@@ -90,7 +90,6 @@ class Database:
             return None
         
     
-        
     def find_all_specific(self, collection_name, query=None, projection=None):    
         """
         Busca todos los documentos en una colección de la base de datos MongoDB.
@@ -127,21 +126,7 @@ class Database:
         except Exception as e:
             print(f"Error al buscar documentos: {e}")
             return None
-        
-    def find_all(self, collection_name):    
-        """
-        Busca todos los documentos en una colección de la base de datos MongoDB.
-        """
-        try:
-            collection = self.get_collection(collection_name)
-            if collection is None:
-                return None
-            return collection.find()
-        except Exception as e:
-            print(f"Error al buscar documentos: {e}")
-            return None
-
-
+       
     def update_one(self, collection_name, query, update):
         """
         Actualiza un documento en una colección de la base de datos MongoDB.
