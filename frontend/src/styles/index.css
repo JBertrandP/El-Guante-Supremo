@@ -31,7 +31,7 @@ main {
   background-image: linear-gradient(to bottom right, #26475a, #4996c3);
   text-align: center;
   width: 100%;
-  height: 91vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;

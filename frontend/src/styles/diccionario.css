@@ -53,7 +53,7 @@ main{
 
 /*----------------------BANNER-----------------------*/
 .banner-dicci{
-    height: 91vh;
+    height: 100vh;
     background-image: linear-gradient(to bottom right, #26475a, #4996c3);
     margin: 0;
     display: flex;
@@ -141,7 +141,7 @@ main{
 
 .dicci-container{
     display: flex;
-  align-items: flex-start;
+  align-items: center;
   padding: 2% 5%;
   gap: 2rem;
   flex-wrap: wrap;

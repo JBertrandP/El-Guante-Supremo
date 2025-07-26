@@ -7,6 +7,7 @@ import Abecedario from './pages/abecedario';
 import Diccionario from './pages/diccionario';
 import Guante from './pages/guante';
 import User from './pages/perfil';
+import Empresa from './pages/empresa';
 import './styles/App.css';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path='/diccionario' element={<Diccionario/>}/>
         <Route path='/guante' element={<Guante/>}/>
         <Route path='/perfil' element={<User/>}/>
+        <Route path='/empresa' element={<Empresa/>}/>
       </Routes>
     </Router>
   );

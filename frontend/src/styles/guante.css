@@ -27,7 +27,7 @@ main {
 
 /*-----------------------BANNER INICIAL----------------*/
 .banner-guante{
-    height: 91vh;
+    height: 100vh;
     background-image: linear-gradient(to bottom right, #26475a, #4996c3);
     margin: 0;
     display: flex;
@@ -137,7 +137,7 @@ main {
 
 /*--------------------DEMAS DIVS-----------------*/
 .general, .esp{
-    background-image: linear-gradient(to bottom right, #26475a, #4996c3);
+  background-image: linear-gradient(to bottom right, #26475a, #4996c3);
   text-align: right;
   width: 100%;
   height: 100vh;

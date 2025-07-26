@@ -28,7 +28,7 @@
 
 /*-------------------------BANNER-----------------------------------*/
 .banner-abc{
-    height: 91vh;
+    height: 100vh;
     background-image: linear-gradient(to bottom right, #26475a, #4996c3);
     margin: 0;
     display: flex;

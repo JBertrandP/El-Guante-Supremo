@@ -33,7 +33,7 @@ function CustomNavbar() {
               <NavDropdown.Item href="/abecedario">Abecedario</NavDropdown.Item>
               <NavDropdown.Item href="/diccionario">Diccionario</NavDropdown.Item>
             </NavDropdown>
-            <Nav.Link href="/">Sobre nosotros</Nav.Link>
+            <Nav.Link href="/empresa">Sobre nosotros</Nav.Link>
           </Nav>
 
           <Nav>
@@ -47,7 +47,6 @@ function CustomNavbar() {
             ) : (
               <>
                 <Nav.Link href="/login">Iniciar sesión</Nav.Link>
-                <Nav.Link href="/signup">Registrarse</Nav.Link>
               </>
             )}
           </Nav>
