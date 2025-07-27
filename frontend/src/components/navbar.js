@@ -3,6 +3,7 @@ import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import logo_navbar from '../assets/images/logo_blanco.png';
 import '../styles/navbar.css';
+import BluetoothManager from './bluetooth';
 
 function CustomNavbar() {
   const navigate = useNavigate();
@@ -26,12 +27,14 @@ function CustomNavbar() {
         </Navbar.Toggle>
         <Navbar.Collapse id="main-navbar">
           <Nav className="me-auto">
-            <Nav.Link href="/">Traductor</Nav.Link>
+            <Nav.Link href="/traductor">Traductor</Nav.Link>
             <NavDropdown title="Herramientas" id="dropdown-conoce">
-              <NavDropdown.Item><i class="fa-solid fa-circle-plus"></i>  Agregar dispositivo</NavDropdown.Item>
+              <NavDropdown.Item><BluetoothManager/></NavDropdown.Item>
               <NavDropdown.Divider></NavDropdown.Divider>
               <NavDropdown.Item href="/abecedario">Abecedario</NavDropdown.Item>
               <NavDropdown.Item href="/diccionario">Diccionario</NavDropdown.Item>
+              <NavDropdown.Divider></NavDropdown.Divider>
+              <NavDropdown.Item href="/guante">Información técnica</NavDropdown.Item>
             </NavDropdown>
             <Nav.Link href="/empresa">Sobre nosotros</Nav.Link>
           </Nav>
