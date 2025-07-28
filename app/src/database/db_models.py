@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 
+MARGEN_TOLERANCIA = 10  # Margen de tolerancia para la distancia entre coordenadas
+
 class Database:
     """
     Clase para manejar la conexión a la base de datos MongoDB.
@@ -111,8 +113,8 @@ class Database:
         except Exception as e:
             print(f"Error al buscar documentos: {e}")
             return None
-    
-    def find_some(self, collection_name, limit=10, start=0):    
+
+    def find_some(self, collection_name, limit=10, start=0, projection=None):    
         """
         Busca algunos documentos en una colección de la base de datos MongoDB.
         Permite aplicar un límite de resultados, así como un punto de inicio.
@@ -122,7 +124,7 @@ class Database:
             collection = self.get_collection(collection_name)
             if collection is None:
                 return None
-            return collection.find().limit(limit).skip(start)
+            return collection.find({}, projection).limit(limit).skip(start)
         except Exception as e:
             print(f"Error al buscar documentos: {e}")
             return None
@@ -162,4 +164,7 @@ class Database:
         except Exception as e:
             print(f"Error al hacer ping a la base de datos: {e}")
             return None
+
+
+
 

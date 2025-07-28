@@ -139,6 +139,7 @@ async def login_google(google_token: TokenModel):
 
 @app.get("/alphabet_ids")
 async def alphabet():
+    print("hola estoy prendido alphabets")
     cursor = db.find_all_specific(os.getenv("alphabet_collection"), query={}, projection={"_id": 1, "letter": 1})
     results = await cursor.to_list(length=None)
     alphabet = convert_list_objectid(results)
@@ -161,15 +162,53 @@ async def alphabet(letter_id: str):
 
 @app.get("/dictionary/{page}")
 async def dictionary(page: int):
-    cursor = db.find_some(os.getenv("dictionary_collection"), 10, (page - 1) * 10)
+    cursor = db.find_some(os.getenv("dictionary_collection"), 10, (page - 1) * 10, projection={"_id": 1, "word": 1})
     results = await cursor.to_list(length=None)
     dictionary = convert_list_objectid(results)
     if not dictionary:
         raise HTTPException(status_code=404, detail="No se encontraron palabras en la base de datos.")
     return {"dictionary": dictionary}
 
+@app.get("/dictionary/word/{word_id}")
+async def dictionary_word(word_id: str):
+    try:
+        obj_id = ObjectId(word_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="ID inválido")
 
+    word_info = await db.find_one(os.getenv("dictionary_collection"), {"_id": obj_id}, projection={"_id": 0, "coordinates": 0})
+    if not word_info:
+        raise HTTPException(status_code=404, detail="No se encontraron palabras en la base de datos.")
+    return {"word_info": word_info}
 
+#web socket o http no se puede usar en el mismo puerto, por lo que se debe usar un puerto diferente para el websocket
+"""
+
+@app.websocket("/ws/glove")
+async def ws_glove(websocket: WebSocket):
+    await websocket.accept()
+    buffer = ""
+    try:
+        while True:
+            data_glove = await websocket.receive_json()
+            sign = await buscar_palabra_por_coordenadas(data_glove)
+
+            if sign == "alto" or sign == "parar":
+                await websocket.send_json({"mensaje_final": buffer})
+                buffer = ""
+                continue
+
+            letter = await buscar_letra_por_coordenadas(data_db, data_glove)
+            if letter:
+                buffer += letter
+                await websocket.send_json({"letter": letter})
+            else:
+                await websocket.send_json({"letter": None})
+
+    except WebSocketDisconnect:
+        print("Conexión cerrada")
+
+"""
 
 #esta parte son pruebas
 @app.get("/ping")
@@ -189,7 +228,8 @@ async def ping():
 def info(request: Request):
     cliente_ip = request.client.host
     user_agent = request.headers.get("user-agent")
-    return {"ip": cliente_ip, "navegador": user_agent}
+    hola = request.client.port
+    return {"ip": cliente_ip, "navegador": user_agent, "puerto": hola}
 
 
 
@@ -212,8 +252,7 @@ if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
     # Para ejecutar el servidor, usa el comando: uvicorn main:app --reload en caso que no se ejecute automáticamente
 
+
     #En el navegador de el frontend ingresa http: 10.100.x.x:8000
-
-
     
     #para utilizarlo mediante la web usar ngrok y el puerto una vez se haya ejecutado el servidor
