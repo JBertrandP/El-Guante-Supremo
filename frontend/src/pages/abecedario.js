@@ -1,71 +1,57 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import axios from 'axios';
 import CustomNavbar from '../components/navbar';
 import Footer from '../components/footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/abecedario.css';
 
-const data = [
-  {
-    "letra": "A",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "La mano se cierra dejando el pulgar hacia un lado, similar a un puño."
-  },
-  {
-    "letra": "B",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "La palma abierta con los dedos juntos apuntando hacia arriba."
-  },
-  {
-    "letra": "C",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "La mano forma una curva como si se sujetara una lata imaginaria."
-  },
-  {
-    "letra": "D",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "El índice apunta hacia arriba mientras los otros dedos tocan el pulgar formando una 'D'."
-  },
-  {
-    "letra": "E",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Los dedos se flexionan hacia la palma sin tocarla del todo, como si se formara una garra."
-  },
-  {
-    "letra": "F",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "El pulgar y el índice se tocan formando un círculo, los demás dedos extendidos."
-  },
-  {
-    "letra": "G",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "La mano se coloca de perfil con el índice extendido y el pulgar apuntando al frente."
-  },
-  {
-    "letra": "H",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "El índice y el medio se extienden juntos, los demás dedos doblados hacia la palma."
-  },
-  {
-    "letra": "I",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Solo el meñique se extiende hacia arriba, los demás dedos están cerrados."
-  },
-  {
-    "letra": "J",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Se usa el meñique extendido para trazar una 'J' en el aire."
-  }
-];
-
 function Abecedario() {
+  const [alphabetList, setAlphabetList] = useState([]);
   const [show, setShow] = useState(false);
-  const [modalData, setModalData] = useState({});
+  const [modalData, setModalData] = useState({
+    letter: '',
+    explanation: '',
+    image:'',
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const API_URL = process.env.REACT_APP_API_URL;
 
-  const handleShow = (item) => {
-    setModalData(item);
-    setShow(true);
+  useEffect(() => {
+    console.log('Llamando a:', `${API_URL}/alphabet_ids`);
+    axios.get(`${API_URL}/alphabet_ids`, {
+      headers:{
+        'Content-Type': 'application/json',
+      }
+    })
+    .then((res) => {
+      console.log("Respuesta:", res.data);
+      if (res.data && Array.isArray(res.data.alphabet)) {
+        setAlphabetList(res.data.alphabet);
+      } else {
+        console.warn("No se recibió un alfabeto válido:", res.data);
+      }
+    })
+    .catch((err) => {
+      console.error('Error al obtener datos:', err);
+    });
+}, []);
+
+
+
+  const handleShow = async (item) => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}/alphabet/${item._id}`);
+      console.log('Respuesta: ', res.data)
+      setModalData(res.data);
+      setShow(true);
+    } catch (err) {
+      console.error('Error al obtener detalles de letra:', err);
+    }
+    setLoading(false);
   };
 
   const handleClose = () => setShow(false);
@@ -101,23 +87,45 @@ function Abecedario() {
           </div>
 
           <div className='main-grid-abc'>
-              {data.map((item, index) => (
-              <div className="grid-abc text-center" key={index}>
-                <Button className='btn-abc' onClick={() => handleShow(item)}>
-                  {item.letra}
+              {Array.isArray(alphabetList) && alphabetList.length > 0 ? (
+                alphabetList.map((letter) => (
+              <div className="grid-abc text-center" key={letter._id}>
+                <Button className='btn-abc' onClick={() => handleShow(letter._id)}>
+                  {letter.letter}
                 </Button>
               </div>
-              ))}
+              ))
+            ):(
+            <p className="text-muted">Cargando alfabeto...</p>
+            )}
           </div>
         </div>
 
       <Modal className='modal-abc' show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title className='modal-abc-title'>¿Cómo se hace la letra "{modalData.letra}"?</Modal.Title>
+          <Modal.Title className='modal-abc-title'>
+            {modalData?.letter 
+              ? `¿Cómo se hace la letra "${modalData.letter}"?` 
+              : "Cargando..."}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <img src={modalData.imagen} alt={modalData.letra} className="modal-img-abc" />
-          <p className='modal-abc-text'>{modalData.descripcion}</p>
+          {loading ? (
+      <p>Cargando información...</p>
+    ) : (
+      <>
+        {modalData?.image && (
+          <img
+            src={modalData.image}
+            alt={modalData.letter}
+            className="modal-img-abc"
+          />
+        )}
+        <p className='modal-abc-text'>
+          {modalData.explanation || "Descripción no disponible."}
+        </p>
+      </>
+      )}
         </Modal.Body>
         <Modal.Footer>
           <Button className='modal-btn-close' onClick={handleClose}>Cerrar</Button>
