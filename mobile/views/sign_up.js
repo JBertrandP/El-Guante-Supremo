@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
 import axios from 'axios';
 import { REACT_APP_API_URL } from 'react-native-dotenv';  
-
+import LoginWithGoogle from './script/LoginWithGoogle';
 const { width, height } = Dimensions.get('window');
 
 const API_URL = REACT_APP_API_URL; 
