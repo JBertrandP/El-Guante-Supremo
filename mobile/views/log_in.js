@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
 import axios from 'axios';
-
+import { REACT_APP_API_URL } from 'react-native-dotenv'; 
 
 const { width, height } = Dimensions.get('window');
 
-
-const API_URL = Constants.manifest.extra.API_URL;
+const API_URL = REACT_APP_API_URL;
 
 const Login = ({ navigation }) => {
   const [loginEmail, setLoginEmail] = useState('');
