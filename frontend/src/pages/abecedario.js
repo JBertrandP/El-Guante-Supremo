@@ -20,33 +20,39 @@ function Abecedario() {
   const API_URL = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    console.log('Llamando a:', `${API_URL}/alphabet_ids`);
-    axios.get(`${API_URL}/alphabet_ids`, {
-      headers:{
-        'Content-Type': 'application/json',
-      }
-    })
-    .then((res) => {
-      console.log("Respuesta:", res.data);
-      if (res.data && Array.isArray(res.data.alphabet)) {
-        setAlphabetList(res.data.alphabet);
-      } else {
-        console.warn("No se recibió un alfabeto válido:", res.data);
-      }
-    })
-    .catch((err) => {
-      console.error('Error al obtener datos:', err);
-    });
+  axios.get(`${API_URL}/alphabet_ids`, {
+    headers: {
+      'ngrok-skip-browser-warning': 'true',
+      'Accept': 'application/json',
+    }
+  })
+  .then((response) => {
+    if (Array.isArray(response.data.alphabet)) {
+      setAlphabetList(response.data.alphabet);
+    } else {
+      setError('Respuesta inválida del servidor.');
+    }
+  })
+  .catch((error) => {
+    console.error('Error al obtener el alfabeto:', error);
+    setError('Error de red o de backend.');
+  });
 }, []);
+
 
 
 
   const handleShow = async (item) => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_URL}/alphabet/${item._id}`);
-      console.log('Respuesta: ', res.data)
-      setModalData(res.data);
+      const res = await axios.get(`${API_URL}/alphabet/${item._id}`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          'Accept': 'application/json',
+        }
+      });
+      console.log('Respuesta: ', res.data.letter_info)
+      setModalData(res.data.letter_info);
       setShow(true);
     } catch (err) {
       console.error('Error al obtener detalles de letra:', err);
@@ -87,17 +93,14 @@ function Abecedario() {
           </div>
 
           <div className='main-grid-abc'>
-              {Array.isArray(alphabetList) && alphabetList.length > 0 ? (
-                alphabetList.map((letter) => (
+              {alphabetList.map((letter) => (
               <div className="grid-abc text-center" key={letter._id}>
-                <Button className='btn-abc' onClick={() => handleShow(letter._id)}>
+                <Button className='btn-abc' onClick={() => handleShow(letter)}>
                   {letter.letter}
                 </Button>
               </div>
               ))
-            ):(
-            <p className="text-muted">Cargando alfabeto...</p>
-            )}
+              }
           </div>
         </div>
 
