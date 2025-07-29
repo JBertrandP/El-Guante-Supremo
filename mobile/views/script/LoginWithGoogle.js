@@ -3,14 +3,15 @@ import { GoogleLogin } from '@react-oauth/google'; // Si utilizas React Native c
 import { jwtDecode } from 'jwt-decode'; // Para decodificar el token de Google
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';  // Para almacenar el token en React Native
-import Config from 'react-native-config'; // Para acceder a las variables de entorno
+import { useNavigation } from '@react-navigation/native'; // Para la navegación
 
 function LoginWithGoogle() {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
 
   // Cuando el login con Google es exitoso
   const handleSuccess = async (credentialResponse) => {
-    const API_URL = Config.API_URL;  // La URL de tu API desde las variables de entorno
+    const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  // Reemplaza con la URL de tu API
+    const GOOGLE_CLIENT_ID = '845168585937-nmcgnisso84eancpnkj9fs4vp4ba8mqp.apps.googleusercontent.com'; // Reemplaza con tu client ID de Google
     const token = credentialResponse.credential;  // El token JWT de Google
     const decoded = jwtDecode(token);  // Decodificamos el token para obtener información adicional (opcional)
     console.log('Datos del usuario Google:', decoded);
@@ -41,7 +42,7 @@ function LoginWithGoogle() {
       <GoogleLogin
         onSuccess={handleSuccess}  // Llamamos a `handleSuccess` cuando el login es exitoso
         onError={handleError}      // Llamamos a `handleError` si hay un error
-        clientId={Config.GOOGLE_CLIENT_ID}  // Le pasamos el clientId de Google desde las variables de entorno
+        clientId="845168585937-nmcgnisso84eancpnkj9fs4vp4ba8mqp.apps.googleusercontent.com"  // Reemplaza con tu clientId de Google
       />
     </View>
   );
