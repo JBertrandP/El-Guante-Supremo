@@ -1,50 +1,60 @@
-import React, { useState } from 'react';
-import { ScrollView, View, Text, StyleSheet, SafeAreaView, Platform, Modal, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, Text, StyleSheet, SafeAreaView, Platform, Modal, TouchableOpacity, Image } from 'react-native';
+import axios from 'axios';
+
+const API_URL = 'https://5e5380afe9d5.ngrok-free.app'; // Tu URL de la API
 
 const Alfabeto = () => {
+  const [alphabet, setAlphabet] = useState([]);
   const [selectedLetter, setSelectedLetter] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
-  const alphabet = [
-    { letter: 'A', description: 'Descripción de A'  },
-    { letter: 'B', description: 'Descripción de B' },
-    { letter: 'C', description: 'Descripción de C' },
-    { letter: 'D', description: 'Descripción de D' },
-    { letter: 'E', description: 'Descripción de E' },
-    { letter: 'F', description: 'Descripción de F' },
-    { letter: 'G', description: 'Descripción de G' },
-    { letter: 'H', description: 'Descripción de H' },
-    { letter: 'I', description: 'Descripción de I' },
-    { letter: 'J', description: 'Descripción de J' },
-    { letter: 'K', description: 'Descripción de K' },
-    { letter: 'L', description: 'Descripción de L' },
-    { letter: 'M', description: 'Descripción de M' },
-    { letter: 'N', description: 'Descripción de N' },
-    { letter: 'Ñ', description: 'Descripción de Ñ' },
-    { letter: 'O', description: 'Descripción de O' },
-    { letter: 'P', description: 'Descripción de P' },
-    { letter: 'Q', description: 'Descripción de Q' },
-    { letter: 'R', description: 'Descripción de R' },
-    { letter: 'S', description: 'Descripción de S' },
-    { letter: 'T', description: 'Descripción de T' },
-    { letter: 'U', description: 'Descripción de U' },
-    { letter: 'V', description: 'Descripción de V' },
-    { letter: 'W', description: 'Descripción de W' },
-    { letter: 'X', description: 'Descripción de X' },
-    { letter: 'Y', description: 'Descripción de Y' },
-    { letter: 'Z', description: 'Descripción de Z' },
-  ];
+  // Fetch alphabet data from API
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/alphabet_ids`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          'Accept': 'application/json',
+        },
+      })
+      .then((response) => {
+        console.log('Datos recibidos:', response.data.alphabet);  // Verifica los datos
+        if (Array.isArray(response.data.alphabet)) {
+          setAlphabet(response.data.alphabet);
+        } else {
+          console.error('No se recibieron los datos del alfabeto');
+        }
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos de la API:', error);
+      });
+  }, []);
 
-  const handleLetterPress = (letter) => {
-    setSelectedLetter(letter);
-    setModalVisible(true);
+  // Obtener información detallada de una letra
+  const handleLetterPress = (letterId) => {
+    console.log('ID de letra seleccionada:', letterId);  // Verifica el ID
+    axios
+      .get(`${API_URL}/alphabet/${letterId}`)
+      .then((response) => {
+        console.log('Datos de la letra seleccionada:', response.data.letter_info);  // Verifica los datos
+        setSelectedLetter(response.data.letter_info);
+        setModalVisible(true);  // Abre el modal con la información
+      })
+      .catch((error) => {
+        console.error('Error al obtener la información de la letra:', error);
+      });
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         {alphabet.map((item, index) => (
-          <TouchableOpacity key={index} style={styles.square} onPress={() => handleLetterPress(item)}>
+          <TouchableOpacity
+            key={index}
+            style={styles.square}
+            onPress={() => handleLetterPress(item._id)} // Usa _id para obtener detalles
+          >
             <Text style={styles.letter}>{item.letter}</Text>
           </TouchableOpacity>
         ))}
@@ -59,10 +69,17 @@ const Alfabeto = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{selectedLetter?.letter}</Text>
-            {/* Aquí puedes agregar la imagen cuando esté disponible */}
-            <Text style={styles.modalImage}>Imagen de {selectedLetter?.letter}</Text>
-            <Text style={styles.modalDescription}>{selectedLetter?.description}</Text>
+            {selectedLetter ? (
+              <>
+                <Text style={styles.modalTitle}>{selectedLetter.letter}</Text>
+                {selectedLetter.image && (
+                  <Image source={{ uri: selectedLetter.image }} style={styles.modalImage} />
+                )}
+                <Text style={styles.modalDescription}>{selectedLetter.explanation}</Text> {/* Cambié description a explanation */}
+              </>
+            ) : (
+              <Text>Cargando...</Text>
+            )}
             <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>Cerrar</Text>
             </TouchableOpacity>
@@ -118,9 +135,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   modalImage: {
-    fontSize: 16,
+    width: 250,
+    height: 250,
     marginVertical: 15,
-    color: '#888',  // Placeholder color for image text
   },
   modalDescription: {
     fontSize: 16,

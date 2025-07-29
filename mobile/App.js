@@ -1,10 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
- import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PantallaPrincipal from './views/splash_screen'; 
-// import Login from './views/log_in';  
-// import SignUp from './views/sign_up'; // Desactivado temporalmente
+import Login from './views/log_in';  
+import SignUp from './views/sign_up'; // Desactivado temporalmente
 import Home from './views/HomePage';  
 import Alfabeto from './views/Alfabeto';
 import Diccionario from './views/diccionario'; 
@@ -21,8 +20,9 @@ export default function App() {
           options={{ headerShown: false }}  
         />
 
-        {/* 
+        
         <Stack.Screen
+        
           name="Login"
           component={Login}
           options={{ 
@@ -34,7 +34,7 @@ export default function App() {
               fontSize: 22,
             },
           }}
-        /> 
+        />
 
         <Stack.Screen
           name="SignUp"
@@ -49,7 +49,6 @@ export default function App() {
             },
           }}
         />
-        */}
 
         <Stack.Screen
           name="Home"

@@ -1,119 +1,122 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
 import axios from 'axios';
-import { REACT_APP_API_URL } from 'react-native-dotenv';  
-import LoginWithGoogle from './script/LoginWithGoogle';
+
+const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  
+
 const { width, height } = Dimensions.get('window');
 
-const API_URL = REACT_APP_API_URL; 
+const SignUp = ({ navigation }) => {
+  const [signUpUsername, setSignUpUsername] = useState('');
+  const [signUpEmail, setSignUpEmail] = useState('');
+  const [signUpPassword, setSignUpPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // Para manejar el estado de carga
 
-const Login = ({ navigation }) => {
-  const [loginEmail, setLoginEmail] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-
-  const validateEmail = (email) => {  
+  // Validación de correo electrónico
+  const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
 
-  const handleLogin = async () => {
-    if (!loginEmail || !loginPassword) {
+  // Validación de contraseña
+  const validatePassword = (password) => {
+    if (password.length < 8) {
+      return 'La contraseña debe tener al menos 8 caracteres';
+    }
+    return '';
+  };
+
+  // Manejo del formulario de registro
+  const handleSignUp = async () => {
+    if (!signUpUsername || !signUpEmail || !signUpPassword) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
 
-    if (!validateEmail(loginEmail)) {
+    if (!validateEmail(signUpEmail)) {
       Alert.alert('Error', 'Por favor, ingresa un correo electrónico válido');
       return;
     }
 
-    if (loginPassword.length < 8) {
-      Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres');
+    const passwordError = validatePassword(signUpPassword);
+    if (passwordError) {
+      Alert.alert('Error', passwordError);
       return;
     }
 
-    try {
-      const formData = new URLSearchParams();
-      formData.append('username', loginEmail); 
-      formData.append('password', loginPassword); 
+    setIsLoading(true); // Cambia el estado de carga a true
 
-      const response = await axios.post(`${API_URL}/signup`, formData, { 
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        timeout: 10000,  
+    try {
+      console.log("Haciendo solicitud a:", `${API_URL}/signup`);
+      const response = await axios.post(`${API_URL}/signup`, {
+        full_name: signUpUsername,
+        email: signUpEmail,
+        password: signUpPassword,
       });
 
-      console.log('Respuesta del servidor:', response.data);
-
-      const { access_token } = response.data;
-
-      if (access_token) {
-        Alert.alert('Éxito', 'Iniciando sesión...');
-        navigation.navigate('Home'); 
+      // Verificar la respuesta del servidor
+      if (response.data.detail === "El correo ya está registrado.") {
+        Alert.alert('Error', 'Este correo ya está registrado');
+      } else if (response.data.message === 'Usuario registrado correctamente') {
+        Alert.alert('Éxito', 'Registro exitoso');
+        navigation.navigate('Login'); // Redirige al login
       } else {
-        Alert.alert('Error', 'Usuario o contraseña incorrectos');
+        Alert.alert('Error', 'Hubo un problema al registrarse, por favor intenta nuevamente');
       }
     } catch (error) {
-      console.error('Error en la solicitud:', error); 
-
+      console.error('Error en la solicitud:', error.response ? error.response : error.message);
       if (error.response) {
-        console.error('Respuesta del servidor:', error.response);
-        Alert.alert('Error', error.response.data.message || 'Hubo un problema al iniciar sesión, por favor intenta nuevamente');
+        Alert.alert('Error', `Error del servidor: ${error.response.data.message}`);
       } else if (error.request) {
-        console.error('No se recibió respuesta del servidor:', error.request);
         Alert.alert('Error', 'No se recibió respuesta del servidor');
       } else {
-        console.error('Error desconocido:', error.message);
-        Alert.alert('Error', 'Hubo un problema al iniciar sesión, por favor intenta nuevamente');
+        Alert.alert('Error', 'Hubo un problema al registrarse, por favor intenta nuevamente');
       }
+    } finally {
+      setIsLoading(false); // Cambia el estado de carga a false
     }
-  };
-
-  const handleSignUpRedirect = () => {
-    navigation.navigate('SignUp');
   };
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
-        
         <Image
           source={require('./assets/logo.png')}
           style={styles.logo}
         />
-        
+
         <TextInput
           style={styles.input}
-          placeholder="Correo electrónico o nombre de usuario"
+          placeholder="Nombre Completo"
+          placeholderTextColor="#33AAEE"
+          value={signUpUsername}
+          onChangeText={setSignUpUsername}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Correo electrónico"
           keyboardType="email-address"
           placeholderTextColor="#33AAEE"
-          value={loginEmail}
-          onChangeText={setLoginEmail}
+          value={signUpEmail}
+          onChangeText={setSignUpEmail}
         />
-        
+
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
           secureTextEntry
           placeholderTextColor="#33AAEE"
-          value={loginPassword}
-          onChangeText={setLoginPassword}
+          value={signUpPassword}
+          onChangeText={setSignUpPassword}
         />
-        
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Iniciar sesión"
-            color="#33AAEE"
-            onPress={handleLogin}
-          />
-        </View>
 
         <View style={styles.buttonContainer}>
           <Button
-            title="No tienes cuenta, crea una"
-            color="#33AAEE"
-            onPress={handleSignUpRedirect} 
+            title={isLoading ? 'Cargando...' : 'Registrarse'}
+            color="white"
+            onPress={handleSignUp}
+            disabled={isLoading} // Desactiva el botón mientras se está cargando
           />
         </View>
       </View>
@@ -130,14 +133,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'center',
-    paddingTop: height * 0.1, 
-    paddingHorizontal: width * 0.05, 
+    paddingTop: height * 0.1,
+    paddingHorizontal: width * 0.05,
   },
   logo: {
     width: width * 0.6,
     height: height * 0.2,
     resizeMode: 'contain',
-    marginBottom: height * 0.05,  
+    marginBottom: height * 0.05,
   },
   input: {
     width: '100%',
@@ -148,15 +151,15 @@ const styles = StyleSheet.create({
     borderColor: '#33AAEE',
     borderWidth: 1,
     color: '#33AAEE',
-    fontSize: width * 0.04,  
+    fontSize: width * 0.04,
   },
   buttonContainer: {
     width: '100%',
-    backgroundColor: '#033552', 
+    backgroundColor: '#033552',
     borderRadius: 8,
-    marginTop: height * 0.05, 
+    marginTop: height * 0.05,
     overflow: 'hidden',
   },
 });
 
-export default Login;
+export default SignUp;

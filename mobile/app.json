@@ -2,7 +2,9 @@
   "expo": {
     "name": "mobile",
     "slug": "mobile",
-    "version": "1.0.0"
-    
+    "version": "1.0.0",
+    "android": {
+      "package": "com.anonymous.mobile"
+    }
   }
 }

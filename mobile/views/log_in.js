@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
 import axios from 'axios';
-import { REACT_APP_API_URL } from 'react-native-dotenv'; 
-import LoginWithGoogle from './script/LoginWithGoogle';
-const { width, height } = Dimensions.get('window');
 
-const API_URL = REACT_APP_API_URL;
+// URL de la API
+const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  // API URL actualizado
+
+const { width, height } = Dimensions.get('window');
 
 const Login = ({ navigation }) => {
   const [loginEmail, setLoginEmail] = useState('');
@@ -17,31 +17,36 @@ const Login = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
+    // Validar si los campos están vacíos
     if (!loginEmail || !loginPassword) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
 
+    // Validar si el correo tiene el formato correcto
     if (!validateEmail(loginEmail)) {
       Alert.alert('Error', 'Por favor, ingresa un correo electrónico válido');
       return;
     }
 
+    // Validar la longitud de la contraseña
     if (loginPassword.length < 8) {
       Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres');
       return;
     }
 
     try {
-      const formData = new URLSearchParams();
-      formData.append('username', loginEmail); 
-      formData.append('password', loginPassword); 
+      // Crear un objeto FormData y agregar los datos
+      const formData = new FormData();
+      formData.append('username', loginEmail);  // Enviar el correo como "username"
+      formData.append('password', loginPassword);  // Enviar la contraseña
 
-      const response = await axios.post(`${API_URL}/login`, formData, { 
+      // Enviar los datos al backend usando 'application/x-www-form-urlencoded'
+      const response = await axios.post(`${API_URL}/login`, formData, {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/x-www-form-urlencoded',  // Usamos este formato
         },
-        timeout: 10000,  
+        timeout: 10000,  // Configuración de timeout de 10 segundos
       });
 
       console.log('Respuesta del servidor:', response.data);
@@ -50,16 +55,16 @@ const Login = ({ navigation }) => {
 
       if (access_token) {
         Alert.alert('Éxito', 'Iniciando sesión...');
-        navigation.navigate('Home'); 
+        navigation.navigate('Home');  // Redirigir a la pantalla Home
       } else {
         Alert.alert('Error', 'Usuario o contraseña incorrectos');
       }
     } catch (error) {
-      console.error('Error en la solicitud:', error); 
+      console.error('Error en la solicitud:', error);
 
       if (error.response) {
         console.error('Respuesta del servidor:', error.response);
-        Alert.alert('Error', error.response.data.message || 'Hubo un problema al iniciar sesión, por favor intenta nuevamente');
+        Alert.alert('Error', error.response.data.detail || 'Hubo un problema al iniciar sesión, por favor intenta nuevamente');
       } else if (error.request) {
         console.error('No se recibió respuesta del servidor:', error.request);
         Alert.alert('Error', 'No se recibió respuesta del servidor');
