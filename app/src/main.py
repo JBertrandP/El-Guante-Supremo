@@ -1,7 +1,8 @@
-# Importa las dependencias necesarias
-from fastapi import Depends, FastAPI, Request, HTTPException
+# Importa las dependencias necesarias de fastApi
+from fastapi import Depends, FastAPI, Request, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
+#importa las dependencias de autenticación y autorización
 from google.oauth2 import id_token
 from google.auth.transport import requests
 
@@ -17,19 +18,18 @@ from bson import ObjectId
 
 from dotenv import load_dotenv
 import os
+#cargamos las variables de entorno desde el archivo .env
 load_dotenv()
-
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+ORIGINS = os.getenv("ORIGINS", "*").split(",")   
 #se crea la instancia la conexión a la base de datos MongoDB
 db = Database()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Al iniciar la app
     await db.start()
     print(" MongoDB conectado correctamente")
     yield  # Aquí se ejecuta la app
-    #  Al apagar la app
     await db.close()
     print(" MongoDB desconectado")
 
@@ -37,14 +37,12 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 # Configuración de CORS
-origins = ["http://localhost:3000"] # Permitir todas las orígenes
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # Permitir todas las orígenes
+    allow_origins=ORIGINS,  
     allow_credentials=True,
-    allow_methods=["*"],  # Permitir todos los métodos HTTP
-    allow_headers=["*"],  # Permitir todos los encabezados
+    allow_methods=["*"],  
+    allow_headers=["*"] 
 )
 
 @app.get("/")
@@ -73,8 +71,6 @@ async def update_user(data: UserUpdate, user=Depends(get_optional_user)):
     """
     if not user:
         raise HTTPException(status_code=401, detail="No autenticado")
-    print(user)
-    print(data)
     if not data.full_name:
         await db.update_one(os.getenv("user_collection"), {"email": user["sub"]}, 
                             {"$set": {"password": hash_password(data.password)}})
@@ -125,12 +121,13 @@ async def login_google(google_token: TokenModel):
             requests.Request(),
             GOOGLE_CLIENT_ID
         )
-        # Puedes usar idinfo["email"], idinfo["name"], etc.
-        # Crear o buscar usuario en base de datos aquí
 
         user_data = {"sub": idinfo["email"]}
-        await db.insert_one(os.getenv("user_collection"), {"full_name": idinfo["name"], "email": user_data["sub"], "password": hash_password(generar_contrasenia_aleatoria())})
-        # Opcional: Generar tu propio JWT
+        await db.insert_one(os.getenv("user_collection"), 
+                            {"full_name": idinfo["name"], 
+                             "email": user_data["sub"], 
+                             "password": hash_password(generar_contrasenia_aleatoria())})
+
         token = create_access_token(user_data)
         return {"access_token": token}
     except ValueError as e:
@@ -139,8 +136,8 @@ async def login_google(google_token: TokenModel):
 
 @app.get("/alphabet_ids")
 async def alphabet():
-    print("hola estoy prendido alphabets")
-    cursor = db.find_all_specific(os.getenv("alphabet_collection"), query={}, projection={"_id": 1, "letter": 1})
+    cursor = db.find_all_specific(os.getenv("alphabet_collection"), query={}, 
+                                  projection={"_id": 1, "letter": 1})
     results = await cursor.to_list(length=None)
     alphabet = convert_list_objectid(results)
 
@@ -155,14 +152,17 @@ async def alphabet(letter_id: str):
     except Exception:
         raise HTTPException(status_code=400, detail="ID inválido")
 
-    letter_info = await db.find_one(os.getenv("alphabet_collection"), {"_id": obj_id}, projection={"_id": 0, "coordinates": 0})
+    letter_info = await db.find_one(os.getenv("alphabet_collection"), {"_id": obj_id}, 
+                                    projection={"_id": 0, "coordinates": 0})
     if not letter_info:
         raise HTTPException(status_code=404, detail="No se encontraron letras en la base de datos.")
+    print(letter_info)
     return {"letter_info": letter_info}
 
 @app.get("/dictionary/{page}")
 async def dictionary(page: int):
-    cursor = db.find_some(os.getenv("dictionary_collection"), 10, (page - 1) * 10, projection={"_id": 1, "word": 1})
+    cursor = db.find_some(os.getenv("dictionary_collection"), 10, (page - 1) * 10, 
+                          projection={"_id": 1, "word": 1})
     results = await cursor.to_list(length=None)
     dictionary = convert_list_objectid(results)
     if not dictionary:
@@ -176,14 +176,14 @@ async def dictionary_word(word_id: str):
     except Exception:
         raise HTTPException(status_code=400, detail="ID inválido")
 
-    word_info = await db.find_one(os.getenv("dictionary_collection"), {"_id": obj_id}, projection={"_id": 0, "coordinates": 0})
+    word_info = await db.find_one(os.getenv("dictionary_collection"), {"_id": obj_id}, 
+                                  projection={"_id": 0, "coordinates": 0})
     if not word_info:
         raise HTTPException(status_code=404, detail="No se encontraron palabras en la base de datos.")
     return {"word_info": word_info}
 
 #web socket o http no se puede usar en el mismo puerto, por lo que se debe usar un puerto diferente para el websocket
 """
-
 @app.websocket("/ws/glove")
 async def ws_glove(websocket: WebSocket):
     await websocket.accept()
@@ -209,7 +209,6 @@ async def ws_glove(websocket: WebSocket):
         print("Conexión cerrada")
 
 """
-
 #esta parte son pruebas
 @app.get("/ping")
 async def ping():
@@ -228,18 +227,14 @@ async def ping():
 def info(request: Request):
     cliente_ip = request.client.host
     user_agent = request.headers.get("user-agent")
-    hola = request.client.port
-    return {"ip": cliente_ip, "navegador": user_agent, "puerto": hola}
-
-
-
+    port = request.client.port
+    return {"ip": cliente_ip, "navegador": user_agent, "puerto": port}
 
 
 if __name__ == "__main__":
     import uvicorn 
     import subprocess
     import re
-
     # Ejecutar 'ipconfig' en Windows
     resultado = subprocess.run("ipconfig", shell=True, capture_output=True, text=True, encoding="cp850")
     # Buscar IP usando 'Direcci' + cualquier caracter (como ¢ o ó)
@@ -248,7 +243,6 @@ if __name__ == "__main__":
     for ip in ips:
         print("Tu IP local es:", ip)
 
-    
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
     # Para ejecutar el servidor, usa el comando: uvicorn main:app --reload en caso que no se ejecute automáticamente
 

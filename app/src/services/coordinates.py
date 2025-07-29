@@ -10,7 +10,7 @@ def buscar_letra_por_coordenadas(data_db: list, data_glove: dict) -> str:
 
     for letra_data in data_db:
         letra = letra_data.get("letter")
-        coords_letra = letra_data.get("Coordinates", {})
+        coords_letra = letra_data.get("coordinates", {})
         distancia_total = 0
         match = True
 
@@ -36,7 +36,7 @@ def buscar_letra_por_coordenadas(data_db: list, data_glove: dict) -> str:
 
     return letra_mas_cercana
 
-def buscar_palabra_por_coordenadas(data_glove: dict) -> str:
+def buscar_palabra_por_coordenadas(data_db: list, data_glove: dict) -> str:
     """ Busca la palabra más cercana en la base de datos según las coordenadas del guante, y devuelve la palabra encontrada. """
     if not data_glove:
         return None
@@ -44,9 +44,9 @@ def buscar_palabra_por_coordenadas(data_glove: dict) -> str:
     palabra_mas_cercana = None
     menor_distancia = float('inf')
 
-    for palabra_data in data_glove:
+    for palabra_data in data_db:
         palabra = palabra_data.get("word")
-        coords_palabra = palabra_data.get("Coordinates", {})
+        coords_palabra = palabra_data.get("coordinates", {})
         distancia_total = 0
         match = True
 
@@ -65,7 +65,6 @@ def buscar_palabra_por_coordenadas(data_glove: dict) -> str:
 
             distancia_total += distancia
 
-        # Esta parte debe estar FUERA del for-de-dedo
         if match and distancia_total < menor_distancia:
             menor_distancia = distancia_total
             palabra_mas_cercana = palabra

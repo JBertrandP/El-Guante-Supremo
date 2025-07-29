@@ -3,24 +3,23 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from datetime import datetime, timedelta, timezone
+import secrets
+import string
 
 SECRET_KEY = "clave-super-secreta"
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
 
-import secrets
-import string
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login", auto_error=False)
 
 def generar_contrasenia_aleatoria(longitud=16):
     caracteres = string.ascii_letters + string.digits + "!@#$%^&*()"
     return ''.join(secrets.choice(caracteres) for _ in range(longitud))
 
-# Función para hashear contraseñas
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
-# 2. Verificar contraseña (login)
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
