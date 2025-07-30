@@ -213,3 +213,50 @@ main {
   border-radius: 20px;
   box-shadow: #26475a 4px 4px 2px;
 }
+
+/*----------------------------RESPONSIVE-----------------*/
+@media (max-width: 768px){
+  .guanteT{
+    flex-direction: column;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 30% 5%;
+  }
+
+  .list-group-item{
+    width: 90%;
+  }
+
+  .general, .esp, .sensores, .giroscopio{
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 13% 5%;
+  }
+
+  .general-container, .esp-container, .sensores-container, .giroscopio-container{
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .general-info, .esp-info, .sensores-info, .giroscopio-info{
+    flex: 1;
+    text-align: left;
+  }
+
+  .guanteT h2, .general-info h2, .esp-info h2, .sensores-info h2, .giroscopio-info h2{
+    font-size: 30px;
+  }
+
+  .num{
+    font-size: 30px;
+  }
+
+  .general-info p, .general-info ul, .esp-info p, .sensores-info p, .giroscopio-info p{
+   font-size: 18px;
+  }
+}

@@ -72,7 +72,7 @@ color: #ffffff;
 
 .nosotros-imagen, .vision-imagen, .solucion-imagen, .mision-imagen, .valores-imagen, .enfoque-imagen {
   flex: 1;
-  max-width: 30%;
+  max-width: 300px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -120,4 +120,43 @@ color: #ffffff;
     color: #ffffff;
   font-size: 25px;
   font-family: 'Times New Roman', Times, serif;
+}
+
+/*----------------RESPONSIVE-----------*/
+@media (max-width: 768px){
+  .empresa-index{
+    flex-direction: column;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 30% 5%;
+  }
+
+  .nosotros, .vision, .solucion, .mision, .valores, .enfoque{
+    text-align: center;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding: 13% 5%;
+  }
+
+  .nosotros-container, .vision-container, .solucion-container, .mision-container, .valores-container, .enfoque-container{
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .nosotros-info, .vision-info, .solucion-info, .mision-info, .valores-info, .enfoque-info{
+    flex: 1;
+    text-align: left;
+  }
+
+  .nosotros-info h2, .vision-info h2, .solucion-info h2, .mision-info h2, .valores-info h2, .enfoque-info h2{
+    font-size: 30px;
+  }
+
+  .nosotros-info p, .vision-info p, .solucion-info p, .mision-info p, .valores-info p, .enfoque-info p{
+    font-size: 18px;
+  }
 }

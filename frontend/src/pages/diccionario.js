@@ -91,9 +91,9 @@ function Diccionario(){
                       </div>
 
                       <div className='main-grid-dicci'>
-                        {palabras.map((phrase) => (
+                        {wordsList.map((phrase) => (
                           <div className='grid-dicci text-center' key={phrase._id}>   
-                            <Button className='btn-dicci' onClick={() => handleShow(item)}>
+                            <Button className='btn-dicci' onClick={() => handleShow(phrase)}>
                               {phrase}
                             </Button>
                           </div>

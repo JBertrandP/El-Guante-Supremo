@@ -321,3 +321,30 @@ main{
     font-family: 'Burgundia', serif;
     font-size: 16px;
 }
+
+/*---------------------RESPONSIVE------------*/
+@media (max-width: 768px) {
+  .dicci-container {
+    justify-content: center;
+  }
+
+  .libro {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .book {
+    margin: 0;
+    position: relative;
+  }
+
+  .cover{
+    left: 0rem;
+  }
+
+  .page{
+    left: 1.25rem;
+  }
+}

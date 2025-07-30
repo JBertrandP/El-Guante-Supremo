@@ -124,13 +124,34 @@ main {
   animation: index-fade-in 7s ease-in forwards;
 }
 
+/*-----------------------------------RESPONSIVE--------------------------------*/
 @media (max-width: 768px) {
+  .banner-index{
+    width: 100vw;
+  }
+
   .guante-container {
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  
+  .guante-info{
+  flex: 1;
+  text-align: left;
   }
 
   .guante-info h2{
     text-align: center;
+    font-size: 30px;
+  }
+
+  .guante-info p{
+    font-size: 18px;
+  }
+
+  .navegar{
+    font-size: 18px;
   }
 }
