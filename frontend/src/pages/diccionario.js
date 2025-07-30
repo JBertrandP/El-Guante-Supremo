@@ -1,72 +1,57 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import axios from 'axios';
 import CustomNavbar from '../components/navbar';
 import Footer from '../components/footer';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../styles/diccionario.css';
 
-const palabras = [
-  {
-    "palabra": "Hola",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Se realiza un leve movimiento hacia afuera con la mano abierta desde la sien, como un saludo militar relajado."
-  },
-  {
-    "palabra": "Gracias",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "La mano abierta toca ligeramente los labios y luego se aleja hacia adelante en un gesto suave."
-  },
-  {
-    "palabra": "Por favor",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "La palma abierta hace un movimiento circular sobre el pecho en el sentido de las agujas del reloj."
-  },
-  {
-    "palabra": "Amigo",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Se entrelazan los índices de ambas manos una vez, como si se tomaran de los dedos."
-  },
-  {
-    "palabra": "Te quiero",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Se forma la letra 'I', luego la 'L' y la 'Y' (combinadas) con una sola mano, representando la frase en lenguaje de señas internacional, común en LSM."
-  },
-  {
-    "palabra": "Familia",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Se forman las letras 'F' con ambas manos, y se hace un círculo desde el frente hacia atrás, indicando unión familiar."
-  },
-  {
-    "palabra": "Escuela",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Ambas manos planas chocan entre sí varias veces, como si aplaudieran suavemente."
-  },
-  {
-    "palabra": "Ayuda",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Una mano abierta sostiene el puño de la otra, que está erguido con el pulgar arriba, y se eleva levemente."
-  },
-  {
-    "palabra": "¿Cómo estás?",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Se hace un gesto de barrido con una mano, luego con ambas palmas hacia arriba en señal de pregunta."
-  },
-  {
-    "palabra": "Baño",
-    "imagen": "https://placehold.co/400",
-    "descripcion": "Se hace el gesto de frotar el pulgar contra el costado del puño cerrado, imitando el movimiento de limpiarse."
-  }
-];
-
-
 function Diccionario(){
-    const [show, setShow] = useState(false);
-    const [modalFrases, setModalFrases] = useState({});
+  const [wordsList, setWordsList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [show, setShow] = useState(false);
+  const [modalFrases, setModalFrases] = useState({});
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL;
 
-    const handleShow = (item) => {
-        setModalFrases(item);
+  useEffect(() => {
+    axios.get(`${API_URL}/dictionary/${currentPage}`,{
+      headers:{
+        'ngrok-skip-browser-warning': 'true',
+        'Accept': 'application/json',
+      }
+    })
+    .then((response) => {
+      if (Array.isArray(response.data)){
+        setWordsList(response.data);
+      } else {
+        setError('Respuesta invalida del server');
+      }
+    })
+    .catch((error) => {
+      console.error('Error al obtener diccionario: ', error);
+      setError('Error de red o backend');
+    });
+  }, []);
+
+    const handleShow = async (item) => {
+      setLoading(true);
+      try{
+        const res = await axios.get(`${API_URL}/dictionary/word/${item._id}`,{
+          headers:{
+            'ngrok-skip-browser-warning': 'true',
+            'Accept': 'application/json',
+          }
+        });
+        console.log('Respuesta: ', res.data); 
+        setModalFrases(res.data); 
         setShow(true);
+      } catch (err) {
+        console.error('Error al obtener detalles de la palabra: ', err);
+      }
+      setLoading(false);
     };
 
     const handleClose = () => setShow(false);
@@ -106,10 +91,10 @@ function Diccionario(){
                       </div>
 
                       <div className='main-grid-dicci'>
-                        {palabras.map((item,index) => (
-                          <div className='grid-dicci text-center' key={index}>
-                            <Button className='btn-dicci' onClick={() => handleShow(item)}>
-                              {item.palabra}
+                        {wordsList.map((phrase) => (
+                          <div className='grid-dicci text-center' key={phrase._id}>   
+                            <Button className='btn-dicci' onClick={() => handleShow(phrase)}>
+                              {phrase}
                             </Button>
                           </div>
                         ))}
@@ -134,11 +119,28 @@ function Diccionario(){
 
                 <Modal className='modal-dicci' show={show} onHide={handleClose} centered>
                     <Modal.Header closeButton>
-                        <Modal.Title className='modal-dicci-title'>¿Cómo se dice "{modalFrases.palabra}"?</Modal.Title>
+                        <Modal.Title className='modal-dicci-title'>
+                          {modalFrases?.phrase
+                            ?`¿Cómo se hace la frase "${modalFrases.phrase}"?`
+                            : "Cargando..."}
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <img src={modalFrases.imagen} alt={modalFrases.palabra} className="modal-img-dicci" />
-                        <p className='modal-dicci-text'>{modalFrases.descripcion}</p>
+                      {loading?(
+                        <p>Cargando información...</p>
+                      ): (
+                        <>
+                        {modalFrases?.image && (
+                          <img 
+                            src={modalFrases.imagen} 
+                            alt={modalFrases.palabra} className="modal-img-dicci" 
+                          />
+                        )}
+                        <p className='modal-dicci-text'>
+                          {modalFrases.descripcion || "Descripción no disponible."}
+                        </p>
+                      </>
+                      )}
                     </Modal.Body>
                     <Modal.Footer>
                         <Button className='modal-dicci-close' onClick={handleClose}>Cerrar</Button>

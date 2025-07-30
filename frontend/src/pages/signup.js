@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/signup.css';
+import LoginWithGoogle from '../components/btnGoogle';
 
 function Signup() {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -10,7 +11,7 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [setSuccess] = useState(false);
   const navigate = useNavigate();
   const cardRef = useRef(null);
   
@@ -114,7 +115,7 @@ function Signup() {
               <div className="invalid-feedback">{passwordError}</div>
             )}
           </p>
-
+            <LoginWithGoogle/>
           <button type="submit">Registrarse</button>
 
           {error && <div className="alert alert-danger mt-3">{error}</div>}

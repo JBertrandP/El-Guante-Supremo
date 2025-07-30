@@ -12,7 +12,7 @@ function Footer(){
           </div>
 
           <div className="col-md-6 mb-6">
-            <h5 className="subtitles">Contáctanos</h5>
+            <h5 className="subtitles" id='contacto'>Contáctanos</h5>
             <p className='text'><i className="fas fa-envelope me-2"></i> contacto@signify.com</p>
             <p className='text'><i className="fas fa-phone me-2"></i> +52 614 132 0311</p>
             <div className="mt-3">

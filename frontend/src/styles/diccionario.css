@@ -53,7 +53,7 @@ main{
 
 /*----------------------BANNER-----------------------*/
 .banner-dicci{
-    height: 91vh;
+    height: 100vh;
     background-image: linear-gradient(to bottom right, #26475a, #4996c3);
     margin: 0;
     display: flex;
@@ -141,7 +141,7 @@ main{
 
 .dicci-container{
     display: flex;
-  align-items: flex-start;
+  align-items: center;
   padding: 2% 5%;
   gap: 2rem;
   flex-wrap: wrap;
@@ -320,4 +320,31 @@ main{
     color: #ffffff;
     font-family: 'Burgundia', serif;
     font-size: 16px;
+}
+
+/*---------------------RESPONSIVE------------*/
+@media (max-width: 768px) {
+  .dicci-container {
+    justify-content: center;
+  }
+
+  .libro {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .book {
+    margin: 0;
+    position: relative;
+  }
+
+  .cover{
+    left: 0rem;
+  }
+
+  .page{
+    left: 1.25rem;
+  }
 }

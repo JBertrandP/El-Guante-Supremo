@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/login.css';
+import LoginWithGoogle from '../components/btnGoogle';
 
 function Login() {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -45,7 +46,7 @@ function Login() {
       const response = await axios.post(`${API_URL}/login`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        }
       });
       console.log(`${API_URL}/login`)
 
@@ -116,8 +117,10 @@ function Login() {
           )}
 
           <br />
+          <LoginWithGoogle/>
           <button type='submit'>Entrar</button>
           <p className='signup-link'>¿Aún no tienes una cuenta? <a href='/signup' onClick={handleGoToSignup}>Crear cuenta</a></p>
+          
         </form>
       </div>
     </div>
