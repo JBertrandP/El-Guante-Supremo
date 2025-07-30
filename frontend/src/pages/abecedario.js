@@ -39,9 +39,6 @@ function Abecedario() {
   });
 }, []);
 
-
-
-
   const handleShow = async (item) => {
     setLoading(true);
     try {
