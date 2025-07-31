@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
+import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Para el ícono de Google
+import { useNavigation } from '@react-navigation/native'; // Para la navegación
 
-// URL de la API
-const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  // API URL actualizado
+const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  
 
 const { width, height } = Dimensions.get('window');
 
-const Login = ({ navigation }) => {
+const Login = () => {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
+  const navigation = useNavigation(); // Inicializamos la navegación
 
   const validateEmail = (email) => {  
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -121,6 +123,15 @@ const Login = ({ navigation }) => {
             onPress={handleSignUpRedirect} 
           />
         </View>
+
+        {/* Botón de Iniciar sesión con Google */}
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={() => navigation.navigate('LoginWithGoogle')} // Navegar a la pantalla de Google login
+        >
+          <Icon name="google" size={20} color="#ffffff" style={styles.googleIcon} />
+          <Text style={styles.googleButtonText}>Iniciar sesión con Google</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -161,6 +172,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: height * 0.05, 
     overflow: 'hidden',
+  },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DB4437', // Color rojo de Google
+    borderRadius: 8,
+    marginTop: height * 0.05,
+    padding: 12,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  googleIcon: {
+    marginRight: 10,
+  },
+  googleButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: width * 0.04,
   },
 });
 

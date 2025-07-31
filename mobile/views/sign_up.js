@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
+import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome'; 
+import { useNavigation } from '@react-navigation/native';
 
 const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  
 
@@ -10,7 +12,7 @@ const SignUp = ({ navigation }) => {
   const [signUpUsername, setSignUpUsername] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // Para manejar el estado de carga
+  const [isLoading, setIsLoading] = useState(false); 
 
   // Validación de correo electrónico
   const validateEmail = (email) => {
@@ -116,9 +118,18 @@ const SignUp = ({ navigation }) => {
             title={isLoading ? 'Cargando...' : 'Registrarse'}
             color="white"
             onPress={handleSignUp}
-            disabled={isLoading} // Desactiva el botón mientras se está cargando
+            disabled={isLoading}
           />
         </View>
+
+        {/* Botón de Registrarse con Google que navega a LoginWithGoogle */}
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={() => navigation.navigate('LoginWithGoogle')} 
+        >
+          <Icon name="google" size={20} color="#ffffff" style={styles.googleIcon} />
+          <Text style={styles.googleButtonText}>Registrarse con Google</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -159,6 +170,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: height * 0.05,
     overflow: 'hidden',
+  },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DB4437', // Color rojo de Google
+    borderRadius: 8,
+    marginTop: height * 0.05,
+    padding: 12,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  googleIcon: {
+    marginRight: 10,
+  },
+  googleButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: width * 0.04,
   },
 });
 

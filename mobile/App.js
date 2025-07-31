@@ -7,7 +7,7 @@ import PantallaPrincipal from './views/splash_screen';
 import Home from './views/HomePage';  
 import Alfabeto from './views/Alfabeto';
 import Diccionario from './views/diccionario'; 
-
+//import LoginWithGoogle from './views/script/LoginWithGoogle';//
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -91,6 +91,12 @@ export default function App() {
             },
           }}
         />
+        {/* Desactivado temporalmente */}
+        {/* <Stack.Screen
+          name="LoginWithGoogle"
+          component={LoginWithGoogle} // Pantalla de Login con Google desactivada
+        /> */}
+
       </Stack.Navigator>
 
       <StatusBar style="auto" />
