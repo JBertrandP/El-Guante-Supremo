@@ -24,8 +24,8 @@ function Diccionario(){
       }
     })
     .then((response) => {
-      if (Array.isArray(response.data)){
-        setWordsList(response.data);
+      if (Array.isArray(response.data.dictionary)){
+        setWordsList(response.data.dictionary);
       } else {
         setError('Respuesta invalida del server');
       }
@@ -45,8 +45,8 @@ function Diccionario(){
             'Accept': 'application/json',
           }
         });
-        console.log('Respuesta: ', res.data); 
-        setModalFrases(res.data); 
+        console.log('Respuesta: ', res.data.word_info); 
+        setModalFrases(res.data.word_info); 
         setShow(true);
       } catch (err) {
         console.error('Error al obtener detalles de la palabra: ', err);
@@ -91,10 +91,10 @@ function Diccionario(){
                       </div>
 
                       <div className='main-grid-dicci'>
-                        {wordsList.map((phrase) => (
-                          <div className='grid-dicci text-center' key={phrase._id}>   
-                            <Button className='btn-dicci' onClick={() => handleShow(phrase)}>
-                              {phrase}
+                        {wordsList.map((word) => (
+                          <div className='grid-dicci text-center' key={word._id}>   
+                            <Button className='btn-dicci' onClick={() => handleShow(word)}>
+                              {word.word}
                             </Button>
                           </div>
                         ))}
@@ -120,8 +120,8 @@ function Diccionario(){
                 <Modal className='modal-dicci' show={show} onHide={handleClose} centered>
                     <Modal.Header closeButton>
                         <Modal.Title className='modal-dicci-title'>
-                          {modalFrases?.phrase
-                            ?`¿Cómo se hace la frase "${modalFrases.phrase}"?`
+                          {modalFrases?.word
+                            ?`¿Cómo se hace la frase "${modalFrases.word}"?`
                             : "Cargando..."}
                         </Modal.Title>
                     </Modal.Header>
@@ -132,12 +132,12 @@ function Diccionario(){
                         <>
                         {modalFrases?.image && (
                           <img 
-                            src={modalFrases.imagen} 
-                            alt={modalFrases.palabra} className="modal-img-dicci" 
+                            src={modalFrases.image} 
+                            alt={modalFrases.word} className="modal-img-dicci" 
                           />
                         )}
                         <p className='modal-dicci-text'>
-                          {modalFrases.descripcion || "Descripción no disponible."}
+                          {modalFrases.explanation || "Descripción no disponible."}
                         </p>
                       </>
                       )}
