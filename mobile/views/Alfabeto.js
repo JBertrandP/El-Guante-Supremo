@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, SafeAreaView, Platform, Modal, TouchableOpacity, Image } from 'react-native';
 import axios from 'axios';
 
-const API_URL = 'https://5e5380afe9d5.ngrok-free.app'; // Tu URL de la API
+const API_URL = 'https://5e5380afe9d5.ngrok-free.app';
 
 const Alfabeto = () => {
   const [alphabet, setAlphabet] = useState([]);
-  const [selectedLetter, setSelectedLetter] = useState(null);
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [modalVisibility, setModalVisibility] = useState({}); // Almacenar la visibilidad de cada modal
 
-  // Fetch alphabet data from API
   useEffect(() => {
     axios
       .get(`${API_URL}/alphabet_ids`, {
@@ -19,7 +17,6 @@ const Alfabeto = () => {
         },
       })
       .then((response) => {
-        console.log('Datos recibidos:', response.data.alphabet);  // Verifica los datos
         if (Array.isArray(response.data.alphabet)) {
           setAlphabet(response.data.alphabet);
         } else {
@@ -31,19 +28,12 @@ const Alfabeto = () => {
       });
   }, []);
 
-  // Obtener información detallada de una letra
+  // Función para manejar la apertura de un modal por letra
   const handleLetterPress = (letterId) => {
-    console.log('ID de letra seleccionada:', letterId);  // Verifica el ID
-    axios
-      .get(`${API_URL}/alphabet/${letterId}`)
-      .then((response) => {
-        console.log('Datos de la letra seleccionada:', response.data.letter_info);  // Verifica los datos
-        setSelectedLetter(response.data.letter_info);
-        setModalVisible(true);  // Abre el modal con la información
-      })
-      .catch((error) => {
-        console.error('Error al obtener la información de la letra:', error);
-      });
+    setModalVisibility((prevState) => ({
+      ...prevState,
+      [letterId]: !prevState[letterId], // Toggle the modal visibility for the selected letter
+    }));
   };
 
   return (
@@ -60,32 +50,35 @@ const Alfabeto = () => {
         ))}
       </ScrollView>
 
-      {/* Modal de letra seleccionada */}
-      <Modal
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={() => setModalVisible(false)}
-        animationType="slide"
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            {selectedLetter ? (
-              <>
-                <Text style={styles.modalTitle}>{selectedLetter.letter}</Text>
-                {selectedLetter.image && (
-                  <Image source={{ uri: selectedLetter.image }} style={styles.modalImage} />
-                )}
-                <Text style={styles.modalDescription}>{selectedLetter.explanation}</Text> {/* Cambié description a explanation */}
-              </>
-            ) : (
-              <Text>Cargando...</Text>
-            )}
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Cerrar</Text>
-            </TouchableOpacity>
+      {/* Modales de letra seleccionada */}
+      {alphabet.map((item) => (
+        <Modal
+          key={item._id}
+          transparent={true}
+          visible={modalVisibility[item._id] || false} // Solo mostrar el modal si la visibilidad es true
+          onRequestClose={() => handleLetterPress(item._id)} // Cerrar el modal al presionar fuera
+          animationType="slide"
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              {item ? (
+                <>
+                  <Text style={styles.modalTitle}>{item.letter}</Text>
+                  {item.image && (
+                    <Image source={{ uri: item.image }} style={styles.modalImage} />
+                  )}
+                  <Text style={styles.modalDescription}>{item.explanation}</Text>
+                </>
+              ) : (
+                <Text>Cargando...</Text>
+              )}
+              <TouchableOpacity onPress={() => handleLetterPress(item._id)} style={styles.closeButton}>
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      ))}
     </SafeAreaView>
   );
 };
