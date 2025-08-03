@@ -5,7 +5,7 @@ import axios from 'axios';
 const { height, width } = Dimensions.get('window');
 
 // Definir la URL de la API
-const API_URL = 'https://e973f9bf45bb.ngrok-free.app';
+const API_URL = 'https://ea3bf73678e3.ngrok-free.app';
 
 // Configuración de axios para incluir headers comunes
 axios.defaults.baseURL = API_URL;

@@ -7,7 +7,8 @@ import PantallaPrincipal from './views/splash_screen';
 import Home from './views/HomePage';  
 import Alfabeto from './views/Alfabeto';
 import Diccionario from './views/diccionario'; 
-//import LoginWithGoogle from './views/script/LoginWithGoogle';//
+import Traductor from './views/traductor'; 
+// import LoginWithGoogle from './views/script/LoginWithGoogle';//
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -91,6 +92,23 @@ export default function App() {
             },
           }}
         />
+
+        
+        <Stack.Screen
+          name="Traductor"
+          component={Traductor}
+          options={{ 
+            title: 'Traductor',
+            headerStyle: { backgroundColor: '#033552' },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: {
+              fontFamily: 'Roboto', 
+              fontWeight: 'bold',
+              fontSize: 22,
+            },
+          }}
+        />
+
         {/* Desactivado temporalmente */}
         {/* <Stack.Screen
           name="LoginWithGoogle"

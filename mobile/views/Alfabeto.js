@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, StyleSheet, SafeAreaView, Platform, Modal, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
 import axios from 'axios';
 
-const API_URL = 'https://e973f9bf45bb.ngrok-free.app';
+const API_URL = 'https://ea3bf73678e3.ngrok-free.app';
 
 const Alfabeto = () => {
   const [alphabet, setAlphabet] = useState([]);
