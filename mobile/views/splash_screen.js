@@ -7,7 +7,7 @@ const PantallaPrincipal = ({ navigation }) => {
   useEffect(() => {
   
     const timer = setTimeout(() => {
-      navigation.replace('Home'); 
+      navigation.replace('Login'); 
     }, 5000);
 
 
