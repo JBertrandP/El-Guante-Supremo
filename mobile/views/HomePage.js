@@ -23,7 +23,10 @@ const HomePage = () => {
       </TouchableOpacity>
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
+        <TouchableOpacity
+          style={styles.footerButton}
+          onPress={() => navigation.navigate('Traductor')} 
+        >
           <FontAwesome5 name="language" size={24} color="white" />
           <Text style={styles.footerButtonText}>Traductor</Text>
         </TouchableOpacity>
