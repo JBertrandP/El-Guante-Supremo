@@ -85,32 +85,14 @@ function Signup() {
         <form onSubmit={handleSignUp}>
 
           <p><input
-            placeholder='Nombre Completo'
-            type="text"
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          /></p> 
+            placeholder='Nombre Completo' type="text"  name="name" value={name} onChange={(e) => setName(e.target.value)} required/>
+          </p> 
 
-          <p><input
-            placeholder='Correo electrónico'
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          /></p>
+          <p><input placeholder='Correo electrónico' type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+          </p>
 
-          <p><input
-            placeholder='Contraseña'
-            type="password"
-            name="password"
-            className={`form-control ${passwordError ? 'is-invalid' : ''}`}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <p><input  placeholder='Contraseña'  type="password" name="password" className={`form-control ${passwordError ? 'is-invalid' : ''}`} value={password}
+            onChange={(e) => setPassword(e.target.value)} required/>
           {passwordError && (
               <div className="invalid-feedback">{passwordError}</div>
             )}
