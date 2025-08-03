@@ -40,8 +40,10 @@ main {
     padding: 3%;
     background-color: #ffffff;
     width: 90%;
-    height: 30%;
+    max-width: 1500px;
     border-radius: 50px 10px;
+    min-height: 50px;
+    transition: height 0.3s ease;
 }
 
 .traduciendo h3{
@@ -51,7 +53,7 @@ font-family: 'Burgundia', sans-serif;
 }
 
 .traduciendo p{
-    color: #000000;
-    font-size: 25px;
+  color: #000000;
+   font-size: 20px;
   font-family: 'Times New Roman', Times, serif;
 }

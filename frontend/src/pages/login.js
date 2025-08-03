@@ -92,22 +92,10 @@ function Login() {
         <br></br>
         <form className='login-form' onSubmit={handleSubmit}>
           <p>
-            <input
-            placeholder='Ingrese correo electónico'
-            type='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            />
+            <input placeholder='Ingrese correo electónico' type='email' value={email} onChange={(e) => setEmail(e.target.value)} required/>
           </p>
           <p>
-            <input
-            placeholder='Ingrese contraseña'
-              type='password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <input placeholder='Ingrese contraseña' type='password' value={password} onChange={(e) => setPassword(e.target.value)} required/>
           </p>
 
           {error && (
