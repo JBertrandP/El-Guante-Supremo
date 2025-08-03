@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 #importa las dependencias de autenticación y autorización
 from google.oauth2 import id_token
 from google.auth.transport import requests
+import asyncio
 
 from contextlib import asynccontextmanager
 
@@ -13,6 +14,8 @@ from database.db_models import Database
 from utils.utils import hash_password, verify_password, create_access_token, get_optional_user, generar_contrasenia_aleatoria, convert_list_objectid
 from models.UserModel import User, UserUpdate
 from models.TokenModel import GoogleToken as TokenModel
+from services.coordinates import buscar_letra_por_coordenadas, buscar_palabra_por_coordenadas
+from typing import List
 
 from bson import ObjectId
 
@@ -180,35 +183,79 @@ async def dictionary_word(word_id: str):
                                   projection={"_id": 0, "coordinates": 0})
     if not word_info:
         raise HTTPException(status_code=404, detail="No se encontraron palabras en la base de datos.")
+    print(word_info)
     return {"word_info": word_info}
 
-#web socket o http no se puede usar en el mismo puerto, por lo que se debe usar un puerto diferente para el websocket
-"""
+
+frontend_clients: List[WebSocket] = []
+
+async def broadcast_message(message: dict):
+    disconnected = []
+    for cliente in frontend_clients:
+        try:
+            await cliente.send_json(message)
+        except Exception:
+            disconnected.append(cliente)
+    for cliente in disconnected:
+        frontend_clients.remove(cliente)
+
 @app.websocket("/ws/glove")
 async def ws_glove(websocket: WebSocket):
     await websocket.accept()
     buffer = ""
     try:
+        data_db_alphabet = await db.find_all_specific(os.getenv("alphabet_collection"), projection={"letter": 1, "coordinates": 1})
+        data_alpha = await data_db_alphabet.to_list()
+        data_db_dictionary = await db.find_all_specific(os.getenv("dictionary_collection"), projection={"word": 1, "coordinates": 1})
+        data_dict = await data_db_dictionary.to_list()
+
         while True:
             data_glove = await websocket.receive_json()
-            sign = await buscar_palabra_por_coordenadas(data_glove)
+            sign = buscar_palabra_por_coordenadas(data_dict, data_glove)
 
             if sign == "alto" or sign == "parar":
-                await websocket.send_json({"mensaje_final": buffer})
+                await broadcast_message({"mensaje_final": buffer})
                 buffer = ""
                 continue
-
-            letter = await buscar_letra_por_coordenadas(data_db, data_glove)
+            elif sign == "borrar":
+                buffer = buffer[:-1]  # Elimina el último carácter
+                await broadcast_message({"info": "Último carácter eliminado"})
+            elif sign == "espacio":
+                buffer += " "
+                await broadcast_message({"info": "Espacio agregado"})
+            elif sign == "limpiar":
+                buffer = ""
+                await broadcast_message({"info": "Buffer limpiado"})
+                continue
+            if sign:
+                await broadcast_message({"data": sign})
+                continue
+            
+            # Si no se encuentra una palabra, buscar letra por coordenadas
+            letter = buscar_letra_por_coordenadas(data_alpha, data_glove)
             if letter:
                 buffer += letter
-                await websocket.send_json({"letter": letter})
+                await broadcast_message({"data": letter})
             else:
-                await websocket.send_json({"letter": None})
+                await broadcast_message({"data": None})
 
     except WebSocketDisconnect:
         print("Conexión cerrada")
 
-"""
+
+@app.websocket("/ws/front")
+async def ws_frontend(websocket: WebSocket):
+    await websocket.accept()
+    frontend_clients.append(websocket)
+    try:
+        while True:
+            await websocket.receive_text()  # Escuchar pings 
+    except WebSocketDisconnect:
+        frontend_clients.remove(websocket)
+        print(f"Cliente desconectado: {websocket.client.host}")
+
+
+
 #esta parte son pruebas
 @app.get("/ping")
 async def ping():
