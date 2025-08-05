@@ -17,7 +17,7 @@ const Traductor = () => {
 
     ws.onerror = (error) => {
       console.error('Error en WebSocket:', error);
-      setTimeout(createWebSocket, 5000); // Intentar reconectar en 5 segundos
+      setTimeout(createWebSocket, 5000); 
     };
 
     ws.onmessage = (event) => {
@@ -47,18 +47,17 @@ const Traductor = () => {
     createWebSocket();
 
     return () => {
-      if (socket) socket.close(); // Cerrar el WebSocket cuando el componente se desmonte
+      if (socket) socket.close(); 
     };
   }, []);
 
-  const anteriores = traducciones.slice(0, -1); // las 3 más viejas
-  const reciente = traducciones[traducciones.length - 1]; // la más reciente
+  const anteriores = traducciones.slice(0, -1);
+  const reciente = traducciones[traducciones.length - 1];
 
   return (
     <View style={styles.container}>
-      {/* Cargar el GIF desde la carpeta "assets" */}
       <Image
-        source={require('./assets/guante1.gif')}  // Asegúrate de que el GIF esté en la carpeta assets
+        source={require('./assets/guante1.gif')}  
         style={styles.gif}
       />
       
@@ -83,55 +82,55 @@ const Traductor = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#33AAEE', // Color de fondo
-    justifyContent: 'flex-start', // Mover el contenido hacia arriba
+    backgroundColor: '#33AAEE', 
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    padding: 20, // Añadir relleno para mayor espacio alrededor
+    padding: 20, 
   },
   gif: {
-    width: width * 0.9,  // El GIF ocupará el 90% del ancho de la pantalla
-    height: height * 0.4, // El GIF tendrá una altura del 40% de la pantalla
-    marginTop: 50, // Subir el GIF más hacia la parte superior de la pantalla
-    marginBottom: 20, // Reducir el espaciado entre el GIF y el cuadro de chat
+    width: width * 0.9,  
+    height: height * 0.4, 
+    marginTop: 50, 
+    marginBottom: 20, 
   },
   chatBox: {
-    width: width * 0.9,  // El cuadro ocupará el 90% del ancho de la pantalla
-    minHeight: height * 0.2, // El cuadro tendrá una altura mínima del 20% de la pantalla
-    padding: 20, // Relleno interno del cuadro
-    backgroundColor: '#FFFFFF', // Fondo blanco para el cuadro de chat
-    borderRadius: 15, // Bordes redondeados
-    borderWidth: 2, // Borde del cuadro
-    borderColor: '#CCCCCC', // Color del borde
-    shadowColor: '#000', // Sombra para efecto de profundidad
+    width: width * 0.9,  
+    minHeight: height * 0.2, 
+    padding: 20, 
+    backgroundColor: '#FFFFFF', 
+    borderRadius: 15, 
+    borderWidth: 2, 
+    borderColor: '#CCCCCC',
+    shadowColor: '#000', 
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
-    justifyContent: 'center',  // Centrar el contenido dentro del cuadro
-    alignItems: 'center',   // Centrar el contenido horizontalmente
+    justifyContent: 'center', 
+    alignItems: 'center',   
   },
   heading: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    textAlign: 'center', // Centrado del texto
+    textAlign: 'center', 
   },
   translation: {
     fontSize: 18,
     color: '#000000',
     marginBottom: 5,
-    textAlign: 'justify', // Justificar el texto
+    textAlign: 'justify',
   },
   separator: {
     fontSize: 18,
     fontWeight: 'bold',
     marginVertical: 10,
-    textAlign: 'center', // Centrado del texto
+    textAlign: 'center', 
   },
   recentTranslation: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6347', // Un color resaltado para la traducción más reciente
-    textAlign: 'center', // Centrado del texto
+    color: '#FF6347', 
+    textAlign: 'center', 
   },
 });
 
