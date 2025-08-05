@@ -2,13 +2,14 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PantallaPrincipal from './views/splash_screen'; 
-// import Login from './views/log_in';  // Línea comentada para desactivar Login
-// import SignUp from './views/sign_up'; // Línea comentada para desactivar SignUp
+import Login from './views/log_in'; 
+import SignUp from './views/sign_up'; 
 import Home from './views/HomePage';  
 import Alfabeto from './views/Alfabeto';
 import Diccionario from './views/diccionario'; 
 import Traductor from './views/traductor'; 
-// import LoginWithGoogle from './views/script/LoginWithGoogle';//
+import LoginWithGoogle from './views/script/LoginWithGoogle';
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -21,8 +22,8 @@ export default function App() {
           options={{ headerShown: false }}  
         />
 
-        {/* Comentamos las pantallas Login y SignUp */}
-        {/* <Stack.Screen
+       
+        <Stack.Screen
           name="Login"
           component={Login}
           options={{ 
@@ -34,9 +35,9 @@ export default function App() {
               fontSize: 22,
             },
           }}
-        /> */}
+        />
 
-        {/* <Stack.Screen
+        <Stack.Screen
           name="SignUp"
           component={SignUp}
           options={{ 
@@ -48,7 +49,7 @@ export default function App() {
               fontSize: 22,
             },
           }}
-        /> */}
+        />
 
         <Stack.Screen
           name="Home"
@@ -78,6 +79,7 @@ export default function App() {
             },
           }}
         />
+
         <Stack.Screen
           name="Diccionario"
           component={Diccionario}  
@@ -93,7 +95,6 @@ export default function App() {
           }}
         />
 
-        
         <Stack.Screen
           name="Traductor"
           component={Traductor}
@@ -109,12 +110,10 @@ export default function App() {
           }}
         />
 
-        {/* Desactivado temporalmente */}
-        {/* <Stack.Screen
+        <Stack.Screen
           name="LoginWithGoogle"
-          component={LoginWithGoogle} // Pantalla de Login con Google desactivada
-        /> */}
-
+          component={LoginWithGoogle} 
+        /> 
       </Stack.Navigator>
 
       <StatusBar style="auto" />
