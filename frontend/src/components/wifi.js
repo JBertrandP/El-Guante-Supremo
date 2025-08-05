@@ -13,11 +13,10 @@ function WifiDeviceManager() {
     try {
       const res = await axios.get(`http://${ip}/status`);
       if (res.status === 200){
-        //const socket = new WebSocket(`ws://${ip}/ws/glove`);
-        const socket = new WebSocket(`wss://${API_URL}/ws/glove`);
+        const socket = new WebSocket(`wss://${API_URL}/ws/front`);
 
         socket.onopen = () => {
-          console.log("Conectado al WebSocket de glove");
+          console.log("Conectado al WebSocket");
         };
 
         socket.onmessage = (event) => {
