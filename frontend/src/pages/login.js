@@ -2,8 +2,10 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/login.css';
+import LoginWithGoogle from '../components/btnGoogle';
 
 function Login() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -41,11 +43,12 @@ function Login() {
       formData.append('username', email);
       formData.append('password', password);
 
-      const response = await axios.post('http://10.100.1.68:8000/login', formData, {
+      const response = await axios.post(`${API_URL}/login`, formData, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        }
       });
+      console.log(`${API_URL}/login`)
 
       const { access_token } = response.data;
 
@@ -89,22 +92,10 @@ function Login() {
         <br></br>
         <form className='login-form' onSubmit={handleSubmit}>
           <p>
-            <input
-            placeholder='Ingrese correo electónico'
-            type='email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            />
+            <input placeholder='Ingrese correo electónico' type='email' value={email} onChange={(e) => setEmail(e.target.value)} required/>
           </p>
           <p>
-            <input
-            placeholder='Ingrese contraseña'
-              type='password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <input placeholder='Ingrese contraseña' type='password' value={password} onChange={(e) => setPassword(e.target.value)} required/>
           </p>
 
           {error && (
@@ -114,8 +105,10 @@ function Login() {
           )}
 
           <br />
+          <LoginWithGoogle/>
           <button type='submit'>Entrar</button>
           <p className='signup-link'>¿Aún no tienes una cuenta? <a href='/signup' onClick={handleGoToSignup}>Crear cuenta</a></p>
+          
         </form>
       </div>
     </div>

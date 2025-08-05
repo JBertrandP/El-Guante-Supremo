@@ -1,45 +1,54 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
-import axios from 'axios'; 
+import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Para el ícono de Google
+import { useNavigation } from '@react-navigation/native'; // Para la navegación
 
-const { width, height } = Dimensions.get('window');  
+const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  
 
-const Login = ({ navigation }) => {
+const { width, height } = Dimensions.get('window');
+
+const Login = () => {
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
+  const navigation = useNavigation(); // Inicializamos la navegación
 
-  const validateEmail = (email) => {
+  const validateEmail = (email) => {  
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
 
   const handleLogin = async () => {
+    // Validar si los campos están vacíos
     if (!loginEmail || !loginPassword) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
 
+    // Validar si el correo tiene el formato correcto
     if (!validateEmail(loginEmail)) {
       Alert.alert('Error', 'Por favor, ingresa un correo electrónico válido');
       return;
     }
 
+    // Validar la longitud de la contraseña
     if (loginPassword.length < 8) {
       Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres');
       return;
     }
 
     try {
-     
-      const formData = new URLSearchParams();
-      formData.append('username', loginEmail); 
-      formData.append('password', loginPassword); 
+      // Crear un objeto FormData y agregar los datos
+      const formData = new FormData();
+      formData.append('username', loginEmail);  // Enviar el correo como "username"
+      formData.append('password', loginPassword);  // Enviar la contraseña
 
-      const response = await axios.post('http://10.100.1.68:8000/login', formData, {
+      // Enviar los datos al backend usando 'application/x-www-form-urlencoded'
+      const response = await axios.post(`${API_URL}/login`, formData, {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/x-www-form-urlencoded',  // Usamos este formato
         },
-        timeout: 10000,  
+        timeout: 10000,  // Configuración de timeout de 10 segundos
       });
 
       console.log('Respuesta del servidor:', response.data);
@@ -48,16 +57,16 @@ const Login = ({ navigation }) => {
 
       if (access_token) {
         Alert.alert('Éxito', 'Iniciando sesión...');
-        navigation.navigate('Home'); 
+        navigation.navigate('Home');  // Redirigir a la pantalla Home
       } else {
         Alert.alert('Error', 'Usuario o contraseña incorrectos');
       }
     } catch (error) {
-      console.error('Error en la solicitud:', error); 
+      console.error('Error en la solicitud:', error);
 
       if (error.response) {
         console.error('Respuesta del servidor:', error.response);
-        Alert.alert('Error', error.response.data.message || 'Hubo un problema al iniciar sesión, por favor intenta nuevamente');
+        Alert.alert('Error', error.response.data.detail || 'Hubo un problema al iniciar sesión, por favor intenta nuevamente');
       } else if (error.request) {
         console.error('No se recibió respuesta del servidor:', error.request);
         Alert.alert('Error', 'No se recibió respuesta del servidor');
@@ -114,6 +123,15 @@ const Login = ({ navigation }) => {
             onPress={handleSignUpRedirect} 
           />
         </View>
+
+        {/* Botón de Iniciar sesión con Google */}
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={() => navigation.navigate('LoginWithGoogle')} // Navegar a la pantalla de Google login
+        >
+          <Icon name="google" size={20} color="#ffffff" style={styles.googleIcon} />
+          <Text style={styles.googleButtonText}>Iniciar sesión con Google</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -154,6 +172,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: height * 0.05, 
     overflow: 'hidden',
+  },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DB4437', // Color rojo de Google
+    borderRadius: 8,
+    marginTop: height * 0.05,
+    padding: 12,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  googleIcon: {
+    marginRight: 10,
+  },
+  googleButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: width * 0.04,
   },
 });
 

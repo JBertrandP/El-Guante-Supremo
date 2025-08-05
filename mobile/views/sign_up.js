@@ -1,80 +1,100 @@
 import React, { useState } from 'react';
-import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions } from 'react-native';
-import axios from 'axios'; 
-const { width, height } = Dimensions.get('window');  
+import { ScrollView, View, Image, TextInput, Button, Alert, StyleSheet, Dimensions, TouchableOpacity, Text } from 'react-native';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome'; 
+import { useNavigation } from '@react-navigation/native';
 
-const SignUp = () => {
+const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  
+
+const { width, height } = Dimensions.get('window');
+
+const SignUp = ({ navigation }) => {
   const [signUpUsername, setSignUpUsername] = useState('');
   const [signUpEmail, setSignUpEmail] = useState('');
   const [signUpPassword, setSignUpPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false); 
 
-  
+  // Validación de correo electrónico
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
 
- 
+  // Validación de contraseña
+  const validatePassword = (password) => {
+    if (password.length < 8) {
+      return 'La contraseña debe tener al menos 8 caracteres';
+    }
+    return '';
+  };
+
+  // Manejo del formulario de registro
   const handleSignUp = async () => {
-   
     if (!signUpUsername || !signUpEmail || !signUpPassword) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
       return;
     }
 
-    
     if (!validateEmail(signUpEmail)) {
       Alert.alert('Error', 'Por favor, ingresa un correo electrónico válido');
       return;
     }
 
-    // Validar la longitud de la contraseña
-    if (signUpPassword.length < 8) {
-      Alert.alert('Error', 'La contraseña debe tener al menos 8 caracteres');
+    const passwordError = validatePassword(signUpPassword);
+    if (passwordError) {
+      Alert.alert('Error', passwordError);
       return;
     }
 
-   
+    setIsLoading(true); // Cambia el estado de carga a true
+
     try {
-      const response = await axios.post('http://10.100.1.68:8000/signup', {
+      console.log("Haciendo solicitud a:", `${API_URL}/signup`);
+      const response = await axios.post(`${API_URL}/signup`, {
         full_name: signUpUsername,
         email: signUpEmail,
         password: signUpPassword,
       });
 
-      
-      if (response.data.success) {
-        Alert.alert('Éxito', 'Registro exitoso...');
+      // Verificar la respuesta del servidor
+      if (response.data.detail === "El correo ya está registrado.") {
+        Alert.alert('Error', 'Este correo ya está registrado');
+      } else if (response.data.message === 'Usuario registrado correctamente') {
+        Alert.alert('Éxito', 'Registro exitoso');
+        navigation.navigate('Login'); // Redirige al login
       } else {
-        
-        Alert.alert('Error', 'Este usuario ya está registrado');
+        Alert.alert('Error', 'Hubo un problema al registrarse, por favor intenta nuevamente');
       }
     } catch (error) {
-    
-      console.error(error);
-      Alert.alert('Error', 'Hubo un problema al registrarse, por favor intenta nuevamente');
+      console.error('Error en la solicitud:', error.response ? error.response : error.message);
+      if (error.response) {
+        Alert.alert('Error', `Error del servidor: ${error.response.data.message}`);
+      } else if (error.request) {
+        Alert.alert('Error', 'No se recibió respuesta del servidor');
+      } else {
+        Alert.alert('Error', 'Hubo un problema al registrarse, por favor intenta nuevamente');
+      }
+    } finally {
+      setIsLoading(false); // Cambia el estado de carga a false
     }
   };
 
   return (
     <ScrollView style={styles.scrollView}>
       <View style={styles.container}>
-       
         <Image
           source={require('./assets/logo.png')}
           style={styles.logo}
         />
-        
-        
+
         <TextInput
           style={styles.input}
-          placeholder="Nombre"
+          placeholder="Nombre Completo"
           placeholderTextColor="#33AAEE"
           value={signUpUsername}
           onChangeText={setSignUpUsername}
         />
-        
-        
+
         <TextInput
           style={styles.input}
           placeholder="Correo electrónico"
@@ -83,8 +103,7 @@ const SignUp = () => {
           value={signUpEmail}
           onChangeText={setSignUpEmail}
         />
-        
-        {/* Campo de contraseña */}
+
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
@@ -93,15 +112,24 @@ const SignUp = () => {
           value={signUpPassword}
           onChangeText={setSignUpPassword}
         />
-        
-       
+
         <View style={styles.buttonContainer}>
           <Button
-            title="Registrarse"
+            title={isLoading ? 'Cargando...' : 'Registrarse'}
             color="white"
             onPress={handleSignUp}
+            disabled={isLoading}
           />
         </View>
+
+        {/* Botón de Registrarse con Google que navega a LoginWithGoogle */}
+        <TouchableOpacity
+          style={styles.googleButton}
+          onPress={() => navigation.navigate('LoginWithGoogle')} 
+        >
+          <Icon name="google" size={20} color="#ffffff" style={styles.googleIcon} />
+          <Text style={styles.googleButtonText}>Registrarse con Google</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -142,6 +170,24 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: height * 0.05,
     overflow: 'hidden',
+  },
+  googleButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#DB4437', // Color rojo de Google
+    borderRadius: 8,
+    marginTop: height * 0.05,
+    padding: 12,
+    width: '100%',
+    justifyContent: 'center',
+  },
+  googleIcon: {
+    marginRight: 10,
+  },
+  googleButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: width * 0.04,
   },
 });
 

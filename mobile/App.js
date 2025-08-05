@@ -1,31 +1,30 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import PantallaPrincipal from './views/splash_screen'; 
-import SignUp from './views/sign_up'; 
+// import Login from './views/log_in';  // Línea comentada para desactivar Login
+// import SignUp from './views/sign_up'; // Línea comentada para desactivar SignUp
 import Home from './views/HomePage';  
-import Alfabeto from './views/Alfabeto'; 
-import { useNavigation } from '@react-navigation/native'; 
-
+import Alfabeto from './views/Alfabeto';
+import Diccionario from './views/diccionario'; 
+import Traductor from './views/traductor'; 
+// import LoginWithGoogle from './views/script/LoginWithGoogle';//
 const Stack = createStackNavigator();
 
 export default function App() {
-
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Splash">
-        {/* Pantalla de Splash */}
         <Stack.Screen
           name="Splash"
           component={PantallaPrincipal}
           options={{ headerShown: false }}  
         />
 
-        {/* Redirige automáticamente a Home después de 3 segundos */}
-        <Stack.Screen
-          name="Home"
-          component={Home}
+        {/* Comentamos las pantallas Login y SignUp */}
+        {/* <Stack.Screen
+          name="Login"
+          component={Login}
           options={{ 
             headerStyle: { backgroundColor: '#033552' },
             headerTintColor: '#FFFFFF',
@@ -35,11 +34,25 @@ export default function App() {
               fontSize: 22,
             },
           }}
-        />
+        /> */}
 
-        <Stack.Screen
+        {/* <Stack.Screen
           name="SignUp"
           component={SignUp}
+          options={{ 
+            headerStyle: { backgroundColor: '#033552' },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: {
+              fontFamily: 'Roboto', 
+              fontWeight: 'bold',
+              fontSize: 22,
+            },
+          }}
+        /> */}
+
+        <Stack.Screen
+          name="Home"
+          component={Home}
           options={{ 
             headerStyle: { backgroundColor: '#033552' },
             headerTintColor: '#FFFFFF',
@@ -65,6 +78,43 @@ export default function App() {
             },
           }}
         />
+        <Stack.Screen
+          name="Diccionario"
+          component={Diccionario}  
+          options={{ 
+            title: 'Diccionario',
+            headerStyle: { backgroundColor: '#033552' },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: {
+              fontFamily: 'Roboto', 
+              fontWeight: 'bold',
+              fontSize: 22,
+            },
+          }}
+        />
+
+        
+        <Stack.Screen
+          name="Traductor"
+          component={Traductor}
+          options={{ 
+            title: 'Traductor',
+            headerStyle: { backgroundColor: '#033552' },
+            headerTintColor: '#FFFFFF',
+            headerTitleStyle: {
+              fontFamily: 'Roboto', 
+              fontWeight: 'bold',
+              fontSize: 22,
+            },
+          }}
+        />
+
+        {/* Desactivado temporalmente */}
+        {/* <Stack.Screen
+          name="LoginWithGoogle"
+          component={LoginWithGoogle} // Pantalla de Login con Google desactivada
+        /> */}
+
       </Stack.Navigator>
 
       <StatusBar style="auto" />

@@ -1,74 +1,127 @@
-import React, { useState } from 'react';
-import { ScrollView, View, Text, StyleSheet, SafeAreaView, Platform, Modal, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, Text, StyleSheet, SafeAreaView, Platform, Modal, TouchableOpacity, ActivityIndicator, Image } from 'react-native';
+import axios from 'axios';
+
+const API_URL = 'https://ea3bf73678e3.ngrok-free.app';
 
 const Alfabeto = () => {
-  const [selectedLetter, setSelectedLetter] = useState(null);
-  const [isModalVisible, setModalVisible] = useState(false);
+  const [alphabet, setAlphabet] = useState([]);
+  const [modalVisibility, setModalVisibility] = useState({});
+  const [letterDetails, setLetterDetails] = useState({});
+  const [loadingImages, setLoadingImages] = useState({});
 
-  const alphabet = [
-    { letter: 'A', description: 'Descripción de A'  },
-    { letter: 'B', description: 'Descripción de B' },
-    { letter: 'C', description: 'Descripción de C' },
-    { letter: 'D', description: 'Descripción de D' },
-    { letter: 'E', description: 'Descripción de E' },
-    { letter: 'F', description: 'Descripción de F' },
-    { letter: 'G', description: 'Descripción de G' },
-    { letter: 'H', description: 'Descripción de H' },
-    { letter: 'I', description: 'Descripción de I' },
-    { letter: 'J', description: 'Descripción de J' },
-    { letter: 'K', description: 'Descripción de K' },
-    { letter: 'L', description: 'Descripción de L' },
-    { letter: 'M', description: 'Descripción de M' },
-    { letter: 'N', description: 'Descripción de N' },
-    { letter: 'Ñ', description: 'Descripción de Ñ' },
-    { letter: 'O', description: 'Descripción de O' },
-    { letter: 'P', description: 'Descripción de P' },
-    { letter: 'Q', description: 'Descripción de Q' },
-    { letter: 'R', description: 'Descripción de R' },
-    { letter: 'S', description: 'Descripción de S' },
-    { letter: 'T', description: 'Descripción de T' },
-    { letter: 'U', description: 'Descripción de U' },
-    { letter: 'V', description: 'Descripción de V' },
-    { letter: 'W', description: 'Descripción de W' },
-    { letter: 'X', description: 'Descripción de X' },
-    { letter: 'Y', description: 'Descripción de Y' },
-    { letter: 'Z', description: 'Descripción de Z' },
-  ];
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/alphabet_ids`, {
+        headers: {
+          'ngrok-skip-browser-warning': 'true',
+          'Accept': 'application/json',
+        },
+      })
+      .then((response) => {
+        if (Array.isArray(response.data.alphabet)) {
+          setAlphabet(response.data.alphabet);
+        } else {
+          console.error('No se recibieron los datos del alfabeto');
+        }
+      })
+      .catch((error) => {
+        console.error('Error al obtener los datos de la API:', error);
+      });
+  }, []);
 
-  const handleLetterPress = (letter) => {
-    setSelectedLetter(letter);
-    setModalVisible(true);
+  const handleLetterPress = (letterId) => {
+    setModalVisibility((prevState) => ({
+      ...prevState,
+      [letterId]: !prevState[letterId],
+    }));
+
+    if (!letterDetails[letterId]) {
+      setLoadingImages(prev => ({...prev, [letterId]: true}));  // Indicador de carga
+      
+      axios
+        .get(`${API_URL}/alphabet/${letterId}`, {
+          headers: {
+            'ngrok-skip-browser-warning': 'true',
+            'Accept': 'application/json',
+          },
+        })
+        .then((response) => {
+          if (response.data.letter_info) {
+            setLetterDetails((prevState) => ({
+              ...prevState,
+              [letterId]: response.data.letter_info,
+            }));
+          }
+        })
+        .catch((error) => {
+          console.error('Error al obtener los detalles de la letra:', error);
+        })
+        .finally(() => {
+          setLoadingImages(prev => ({...prev, [letterId]: false}));  // Detener indicador de carga
+        });
+    }
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.container}>
         {alphabet.map((item, index) => (
-          <TouchableOpacity key={index} style={styles.square} onPress={() => handleLetterPress(item)}>
+          <TouchableOpacity
+            key={index}
+            style={styles.square}
+            onPress={() => handleLetterPress(item._id)}
+          >
             <Text style={styles.letter}>{item.letter}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
 
-      {/* Modal de letra seleccionada */}
-      <Modal
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={() => setModalVisible(false)}
-        animationType="slide"
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{selectedLetter?.letter}</Text>
-            {/* Aquí puedes agregar la imagen cuando esté disponible */}
-            <Text style={styles.modalImage}>Imagen de {selectedLetter?.letter}</Text>
-            <Text style={styles.modalDescription}>{selectedLetter?.description}</Text>
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Cerrar</Text>
-            </TouchableOpacity>
+      {alphabet.map((item) => (
+        <Modal
+          key={item._id}
+          transparent={true}
+          visible={modalVisibility[item._id] || false}
+          onRequestClose={() => handleLetterPress(item._id)}
+          animationType="slide"
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>{item.letter}</Text>
+              
+              <View style={styles.imageContainer}>
+                {loadingImages[item._id] ? (
+                  <ActivityIndicator size="large" color="#054F7A" />
+                ) : (
+                  letterDetails[item._id]?.image ? (
+                    <Image
+                      source={{ 
+                        uri: `${letterDetails[item._id].image}?t=${new Date().getTime()}`, // Evitar caché con un timestamp
+                      }}
+                      style={styles.modalImage}
+                      resizeMode="contain"
+                      onError={(e) => console.log('Error loading image:', e.nativeEvent.error)}
+                    />
+                  ) : (
+                    <Text style={styles.noImageText}>Imagen no disponible</Text>
+                  )
+                )}
+              </View>
+              
+              <Text style={styles.modalDescription}>
+                {letterDetails[item._id]?.explanation || 'No hay explicación disponible'}
+              </Text>
+              
+              <TouchableOpacity 
+                onPress={() => handleLetterPress(item._id)} 
+                style={styles.closeButton}
+              >
+                <Text style={styles.closeButtonText}>Cerrar</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
+        </Modal>
+      ))}
     </SafeAreaView>
   );
 };
@@ -117,10 +170,21 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
   },
-  modalImage: {
-    fontSize: 16,
+  imageContainer: {
+    width: 200,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginVertical: 15,
-    color: '#888',  // Placeholder color for image text
+  },
+  modalImage: {
+    width: '100%',
+    height: '100%',
+  },
+  noImageText: {
+    fontSize: 16,
+    color: '#888888',
+    textAlign: 'center',
   },
   modalDescription: {
     fontSize: 16,

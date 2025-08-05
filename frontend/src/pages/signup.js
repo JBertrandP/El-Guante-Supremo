@@ -2,14 +2,16 @@ import { useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/signup.css';
+import LoginWithGoogle from '../components/btnGoogle';
 
 function Signup() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [success, setSuccess] = useState(false);
+  const [setSuccess] = useState(false);
   const navigate = useNavigate();
   const cardRef = useRef(null);
   
@@ -42,11 +44,12 @@ function Signup() {
     formData.append('password', password);
 
     try {
-      const response = await axios.post('http://10.100.1.68:8000/signup', {
+      const response = await axios.post(`${API_URL}/signup`, {
         full_name: name,
         email: email,
         password: password,
       });
+      console.log(`${API_URL}/signup`);
 
       navigate('/');
 
@@ -82,45 +85,22 @@ function Signup() {
         <form onSubmit={handleSignUp}>
 
           <p><input
-            placeholder='Nombre Completo'
-            type="text"
-            name="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          /></p> 
+            placeholder='Nombre Completo' type="text"  name="name" value={name} onChange={(e) => setName(e.target.value)} required/>
+          </p> 
 
-          <p><input
-            placeholder='Correo electrónico'
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          /></p>
+          <p><input placeholder='Correo electrónico' type="email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} required/>
+          </p>
 
-          <p><input
-            placeholder='Contraseña'
-            type="password"
-            name="password"
-            className={`form-control ${passwordError ? 'is-invalid' : ''}`}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <p><input  placeholder='Contraseña'  type="password" name="password" className={`form-control ${passwordError ? 'is-invalid' : ''}`} value={password}
+            onChange={(e) => setPassword(e.target.value)} required/>
           {passwordError && (
               <div className="invalid-feedback">{passwordError}</div>
             )}
           </p>
-
+            <LoginWithGoogle/>
           <button type="submit">Registrarse</button>
 
           {error && <div className="alert alert-danger mt-3">{error}</div>}
-          {success && (
-            <div className="alert alert-success mt-3">
-              Registro exitoso 🎉
-            </div>
-          )}
 
           <p className="login-link">¿Ya tienes cuenta? <a href="/login" onClick={handleGoToLogin}>Iniciar sesión</a></p>
         </form>
