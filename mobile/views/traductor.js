@@ -8,7 +8,7 @@ const Traductor = () => {
   const [socket, setSocket] = useState(null);
 
   const createWebSocket = () => {
-    const ws = new WebSocket('wss://ea3bf73678e3.ngrok-free.app/ws/glove');
+    const ws = new WebSocket('wss://4980941ccc8e.ngrok-free.app/ws/front');
 
     ws.onopen = () => {
       console.log('Conexión WebSocket abierta');
@@ -59,6 +59,7 @@ const Traductor = () => {
       <Image
         source={require('./assets/guante1.gif')}  
         style={styles.gif}
+        resizeMode="contain"  
       />
       
       <View style={styles.chatBox}>

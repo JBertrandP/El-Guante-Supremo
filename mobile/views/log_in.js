@@ -4,7 +4,7 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Para el ícono de Google
 import { useNavigation } from '@react-navigation/native'; // Para la navegación
 
-const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  
+const API_URL = 'https://4980941ccc8e.ngrok-free.app';  
 
 const { width, height } = Dimensions.get('window');
 
@@ -124,7 +124,8 @@ const Login = () => {
           />
         </View>
 
-        {/* Botón de Iniciar sesión con Google */}
+        {/* Botón de Iniciar sesión con Google - Este bloque se ha comentado para que nunca se muestre */}
+        {/* 
         <TouchableOpacity
           style={styles.googleButton}
           onPress={() => navigation.navigate('LoginWithGoogle')} // Navegar a la pantalla de Google login
@@ -132,6 +133,7 @@ const Login = () => {
           <Icon name="google" size={20} color="#ffffff" style={styles.googleIcon} />
           <Text style={styles.googleButtonText}>Iniciar sesión con Google</Text>
         </TouchableOpacity>
+        */}
       </View>
     </ScrollView>
   );

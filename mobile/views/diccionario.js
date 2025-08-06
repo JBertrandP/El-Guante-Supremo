@@ -5,7 +5,7 @@ import axios from 'axios';
 const { height, width } = Dimensions.get('window');
 
 // Definir la URL de la API
-const API_URL = 'https://ea3bf73678e3.ngrok-free.app';
+const API_URL = 'https://4980941ccc8e.ngrok-free.app';
 
 // Configuración de axios para incluir headers comunes
 axios.defaults.baseURL = API_URL;
@@ -19,16 +19,19 @@ const Diccionario = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1); // Estado para la página
+  const [totalPages, setTotalPages] = useState(1); // Total de páginas
 
-  // Función para obtener datos del diccionario
-  const fetchDictionaryData = async () => {
+  // Función para obtener datos del diccionario con paginación
+  const fetchDictionaryData = async (pageNumber) => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get('/dictionary/1'); // Ruta para obtener la lista de palabras
+      const response = await axios.get(`/dictionary/1?page=${pageNumber}`); // Ruta con el número de página
       console.log("Respuesta del diccionario:", response.data); // Log para ver el JSON de la respuesta
       if (response.data && response.data.dictionary && Array.isArray(response.data.dictionary)) {
         setWordsList(response.data.dictionary);
+        setTotalPages(response.data.total_pages); // Establecer el total de páginas
       } else {
         setError('Formato de datos inesperado');
       }
@@ -41,8 +44,8 @@ const Diccionario = () => {
   };
 
   useEffect(() => {
-    fetchDictionaryData();
-  }, []);
+    fetchDictionaryData(page); // Llamar a la API cuando la página cambie
+  }, [page]);
 
   // Función para obtener los detalles de la palabra
   const fetchWordDetails = async (word_id) => {
@@ -106,6 +109,29 @@ const Diccionario = () => {
         ) : (
           !loading && <Text style={styles.noResults}>No se encontraron resultados</Text>
         )}
+      </View>
+
+      {/* Navegación por páginas */}
+      <View style={styles.paginationContainer}>
+        <View style={styles.pagination}>
+          <TouchableOpacity
+            onPress={() => setPage(page > 1 ? page - 1 : 1)}
+            disabled={page === 1}
+            style={[styles.pageButton, page === 1 && styles.disabledButton]}
+          >
+            <Text style={styles.pageButtonText}>Anterior</Text>
+          </TouchableOpacity>
+          
+          <Text style={styles.pageNumber}>{page} / {totalPages}</Text>
+
+          <TouchableOpacity
+            onPress={() => setPage(page < totalPages ? page + 1 : totalPages)}
+            disabled={page === totalPages}
+            style={[styles.pageButton, page === totalPages && styles.disabledButton]}
+          >
+            <Text style={styles.pageButtonText}>Siguiente</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Modal de detalles */}
@@ -185,6 +211,34 @@ const styles = StyleSheet.create({
     color: '#888',
     textAlign: 'center',
     marginTop: 5,
+  },
+  paginationContainer: {
+    flex: 1, // Asegura que los botones de paginación vayan al final
+    justifyContent: 'flex-end', // Coloca los botones de paginación en la parte inferior
+    marginBottom: 20, // Para un pequeño espacio con los botones
+  },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  pageButton: {
+    backgroundColor: '#054F7A',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginHorizontal: 10,
+  },
+  disabledButton: {
+    backgroundColor: '#aaa',
+  },
+  pageButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  pageNumber: {
+    fontSize: 16,
+    color: '#054F7A',
   },
   modalOverlay: {
     flex: 1,

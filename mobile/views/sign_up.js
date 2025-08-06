@@ -4,7 +4,7 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome'; 
 import { useNavigation } from '@react-navigation/native';
 
-const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  
+const API_URL = 'https://4980941ccc8e.ngrok-free.app';  
 
 const { width, height } = Dimensions.get('window');
 
@@ -14,13 +14,12 @@ const SignUp = ({ navigation }) => {
   const [signUpPassword, setSignUpPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false); 
 
-  // Validación de correo electrónico
+ 
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
     return emailRegex.test(email);
   };
 
-  // Validación de contraseña
   const validatePassword = (password) => {
     if (password.length < 8) {
       return 'La contraseña debe tener al menos 8 caracteres';
@@ -28,7 +27,6 @@ const SignUp = ({ navigation }) => {
     return '';
   };
 
-  // Manejo del formulario de registro
   const handleSignUp = async () => {
     if (!signUpUsername || !signUpEmail || !signUpPassword) {
       Alert.alert('Error', 'Todos los campos son obligatorios');
@@ -122,14 +120,7 @@ const SignUp = ({ navigation }) => {
           />
         </View>
 
-        {/* Botón de Registrarse con Google que navega a LoginWithGoogle */}
-        <TouchableOpacity
-          style={styles.googleButton}
-          onPress={() => navigation.navigate('LoginWithGoogle')} 
-        >
-          <Icon name="google" size={20} color="#ffffff" style={styles.googleIcon} />
-          <Text style={styles.googleButtonText}>Registrarse con Google</Text>
-        </TouchableOpacity>
+        {/* El botón de Google ya no está presente */}
       </View>
     </ScrollView>
   );
@@ -170,24 +161,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginTop: height * 0.05,
     overflow: 'hidden',
-  },
-  googleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#DB4437', // Color rojo de Google
-    borderRadius: 8,
-    marginTop: height * 0.05,
-    padding: 12,
-    width: '100%',
-    justifyContent: 'center',
-  },
-  googleIcon: {
-    marginRight: 10,
-  },
-  googleButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: width * 0.04,
   },
 });
 

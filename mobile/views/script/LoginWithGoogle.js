@@ -1,48 +1,60 @@
-import React from 'react';
-import { GoogleLogin } from '@react-oauth/google'; 
-import { jwtDecode } from 'jwt-decode'; 
+import React, { useState } from 'react';
+import { GoogleLogin } from '@react-oauth/google'; // Import Google Login
+import { useNavigation } from '@react-navigation/native'; // For navigation
+import { View, Text } from 'react-native';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
-import { useNavigation } from '@react-navigation/native'; 
-import { View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function LoginWithGoogle() {
+const LoginWithGoogle = () => {
   const navigation = useNavigation();
+  const [user, setUser] = useState(null);
 
-  const handleSuccess = async (credentialResponse) => {
-    const API_URL = 'https://5e5380afe9d5.ngrok-free.app';  
-    const token = credentialResponse.credential;  
-    const decoded = jwtDecode(token); 
-    console.log('Datos del usuario Google:', decoded);
-
+  // Handle successful login
+  const handleLoginSuccess = async (credentialResponse) => {
     try {
-      const res = await axios.post(`${API_URL}/auth/google`, {
-        token: credentialResponse.credential  
-      });
+      // Fetch the token from the response
+      const token = credentialResponse.credential;
+      console.log('Received token:', token); // You can check the token in the console
 
-      await AsyncStorage.setItem('token', res.data.token); 
-      navigation.navigate('Home');  // Redirigir a Home tras éxito
-    } catch (err) {
-      alert('Error de autenticación');
-      console.error('Error de autenticación:', err);
+      // Send the token to the backend to authenticate the user
+      const res = await axios.post('https://507fe4cf6477.ngrok-free.app/auth/google', { token });
+      
+      // Save the user token to AsyncStorage
+      await AsyncStorage.setItem('userToken', res.data.token);
+
+      // Store the user data
+      setUser(res.data.user);
+
+      // Navigate to Home page after successful login
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Login Error: ', error);
     }
   };
 
-  // Cuando el login con Google falla
-  const handleError = () => {
-    alert('Fallo el inicio de sesión con Google');
-    console.error('Fallo el inicio de sesión con Google');
+  // Handle login failure
+  const handleLoginFailure = (error) => {
+    console.error('Login Failed: ', error);
   };
 
   return (
     <View>
+      <Text>Login with Google</Text>
       <GoogleLogin
-        onSuccess={handleSuccess} 
-        onError={handleError}     
-        clientId="845168585937-nmcgnisso84eancpnkj9fs4vp4ba8mqp.apps.googleusercontent.com"  
+        onSuccess={handleLoginSuccess}  // Success callback
+        onError={handleLoginFailure}    // Error callback
+        clientId="845168585937-nmcgnisso84eancpnkj9fs4vp4ba8mqp.apps.googleusercontent.com" // Replace with actual client ID
       />
+      
+      {/* Display user info after login */}
+      {user && (
+        <View>
+          <Text>Welcome, {user.name}!</Text>
+          <Text>{user.email}</Text>
+        </View>
+      )}
     </View>
   );
-}
+};
 
 export default LoginWithGoogle;
