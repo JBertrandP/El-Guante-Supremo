@@ -6,9 +6,10 @@ import '../styles/traductor.css';
 function Traductor() {
   const [traducciones, setTraducciones] = useState([]);
   const [socket, setSocket] = useState(null);
+  const WS_URL = process.env.REACT_APP_WS_URL;
 
   const createWebSocket = () => {
-    const ws = new WebSocket(`wss://ea3bf73678e3.ngrok-free.app/ws/front`);
+    const ws = new WebSocket(`wss://${WS_URL}/ws/front`);
 
     ws.onopen = () => {
       console.log('Conexión WebSocket abierta');

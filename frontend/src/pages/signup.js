@@ -11,11 +11,20 @@ function Signup() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const cardRef = useRef(null);
-  
 
+  const allowedDomain = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'live.com', 'utch.edu.mx'];
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[\w.-]+@([\w.-]+\.\w{2,6})$/;
+    const match = email.match(emailRegex);
+    if (!match) return false;
+    const domain = match[1].toLowerCase();
+    return allowedDomain.includes(domain);
+  };
+  
   //validar contraseña
   const validarPassword = (pwd) => {
     const minLength = 8;
@@ -38,10 +47,9 @@ function Signup() {
       return;
     }
 
-    const formData = new URLSearchParams();
-    formData.append('full_name', name)
-    formData.append('email', email);
-    formData.append('password', password);
+    if (!email || !validateEmail(email)) {
+      return setError('Correo inválido o no permitido');
+    }
 
     try {
       const response = await axios.post(`${API_URL}/signup`, {
