@@ -24,7 +24,8 @@ import os
 #cargamos las variables de entorno desde el archivo .env
 load_dotenv()
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-ORIGINS = os.getenv("ORIGINS", "*").split(",")   
+
+ORIGINS = [origin.strip() for origin in os.getenv("ORIGINS", "").split(",")]
 #se crea la instancia la conexión a la base de datos MongoDB
 db = Database()
 
@@ -214,7 +215,7 @@ async def ws_glove(websocket: WebSocket):
             sign = buscar_palabra_por_coordenadas(data_dict, data_glove)
 
             if sign == "alto" or sign == "parar":
-                await broadcast_message({"mensaje_final": buffer})
+                await broadcast_message({"data": buffer})
                 buffer = ""
                 continue
             elif sign == "borrar":
@@ -250,6 +251,7 @@ async def ws_frontend(websocket: WebSocket):
     try:
         while True:
             await websocket.receive_text()  # Escuchar pings 
+            await broadcast_message({"data": "Hola, ejemplo"})
     except WebSocketDisconnect:
         frontend_clients.remove(websocket)
         print(f"Cliente desconectado: {websocket.client.host}")
